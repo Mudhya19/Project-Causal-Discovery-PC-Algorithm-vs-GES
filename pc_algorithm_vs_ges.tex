@@ -1,0 +1,2023 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  11pt,
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Causal Discovery pada Dataset Pima Indians Diabetes: Implementasi Algoritma PC-GES},
+  pdfauthor={Muhammad Dhiauddin - 25917024},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Causal Discovery pada Dataset Pima Indians Diabetes: Implementasi
+Algoritma PC-GES}
+\author{Muhammad Dhiauddin - 25917024}
+\date{22 June 2026}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{3}
+\tableofcontents
+}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# ── Jalankan blok ini SATU KALI untuk menginstal semua dependensi ──────────────}
+\FunctionTok{install.packages}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"bnlearn"}\NormalTok{, }\StringTok{"igraph"}\NormalTok{, }\StringTok{"dagitty"}\NormalTok{,}
+                   \StringTok{"ggplot2"}\NormalTok{, }\StringTok{"dplyr"}\NormalTok{, }\StringTok{"corrplot"}\NormalTok{, }\StringTok{"knitr"}\NormalTok{))}
+
+\CommentTok{\# Rgraphviz (opsional, alternatif visualisasi via Bioconductor)}
+\ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{requireNamespace}\NormalTok{(}\StringTok{"BiocManager"}\NormalTok{, }\AttributeTok{quietly =} \ConstantTok{TRUE}\NormalTok{))}
+  \FunctionTok{install.packages}\NormalTok{(}\StringTok{"BiocManager"}\NormalTok{)}
+\NormalTok{BiocManager}\SpecialCharTok{::}\FunctionTok{install}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"Rgraphviz"}\NormalTok{, }\StringTok{"graph"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(bnlearn)}
+\FunctionTok{library}\NormalTok{(igraph)}
+\FunctionTok{library}\NormalTok{(dagitty)}
+\FunctionTok{library}\NormalTok{(ggplot2)}
+\FunctionTok{library}\NormalTok{(dplyr)}
+\FunctionTok{library}\NormalTok{(corrplot)}
+\FunctionTok{library}\NormalTok{(knitr)}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{42}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\textbf{Identitas Mahasiswa:}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Nama:} Muhammad Dhiauddin
+\item
+  \textbf{NIM:} 25917024
+\item
+  \textbf{Konsentrasi:} Sains Data - Profesional
+\item
+  \textbf{Github:}
+  \url{https://github.com/Mudhya19/Project-Causal-Discovery-PC-Algorithm-vs-GES.git}
+\item
+  \textbf{Kaggle:}
+  \url{https://www.kaggle.com/datasets/uciml/pima-indians-diabetes-database}
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\section{Pendahuluan}\label{pendahuluan}
+
+Diabetes melitus tipe 2 merupakan salah satu penyakit metabolik kronis
+dengan prevalensi tertinggi di dunia. World Health Organization (WHO)
+mencatat lebih dari 422 juta orang menderita diabetes, dengan sebagian
+besar beban penyakit berada di negara berkembang. Kemampuan untuk
+memahami \textbf{faktor kausal} - bukan sekadar faktor yang berkorelasi
+- sangat penting agar intervensi kesehatan dapat dirancang secara lebih
+efektif. Sebagai contoh, mengetahui bahwa penurunan BMI secara
+\emph{kausal} menurunkan risiko diabetes memberikan justifikasi yang
+lebih kuat untuk program penurunan berat badan dibandingkan sekadar
+mengetahui bahwa BMI dan diabetes berkorelasi positif.
+
+Pendekatan \emph{causal discovery} memungkinkan kita memperoleh struktur
+kausal secara data-driven dari data observasional, tanpa memerlukan
+eksperimen terkontrol (RCT). Salah satu algoritma yang paling banyak
+digunakan adalah \textbf{PC Algorithm} (Spirtes et al., 2000), yang
+bekerja dengan menjalankan serangkaian uji independensi kondisional (CI
+test) untuk membangun \emph{Completed Partially Directed Acyclic Graph}
+(CPDAG) - representasi kelas ekivalensi Markov dari semua DAG yang
+kompatibel dengan data.
+
+\textbf{Pertanyaan kausal utama} yang dirumuskan dalam studi ini adalah:
+
+\begin{quote}
+\emph{``Apakah Indeks Massa Tubuh (BMI) dan kadar glukosa darah secara
+kausal mempengaruhi risiko diabetes (Outcome), atau hubungan tersebut
+dijembatani atau dikonfound oleh variabel lain seperti usia (Age) dan
+riwayat kehamilan (Pregnancies)?''}
+\end{quote}
+
+Dataset yang digunakan adalah \textbf{Pima Indians Diabetes Database}
+yang bersumber dari National Institute of Diabetes and Digestive and
+Kidney Diseases (NIDDK), tersedia secara publik di Kaggle
+(\url{https://www.kaggle.com/datasets/uciml/pima-indians-diabetes-database}).
+Dataset ini mencatat pengukuran medis dari 768 wanita keturunan suku
+Pima Indian berusia minimal 21 tahun.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\section{Metode}\label{metode}
+
+\subsection{Deskripsi Variabel}\label{deskripsi-variabel}
+
+Dataset terdiri atas 9 variabel dengan tipe data yang dijelaskan pada
+Tabel 1.
+
+\begin{longtable}[]{@{}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.0312}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2604}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1458}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.5625}}@{}}
+\caption{Deskripsi Variabel Dataset Pima Indians
+Diabetes}\tabularnewline
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedleft
+No
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Variabel
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Tipe
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Deskripsi
+\end{minipage} \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedleft
+No
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Variabel
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Tipe
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Deskripsi
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1 & Pregnancies & Kontinu & Jumlah kehamilan \\
+2 & Glucose & Kontinu & Glukosa plasma 2 jam pasca tes toleransi oral
+(mg/dL) \\
+3 & BloodPressure & Kontinu & Tekanan darah diastolik (mm Hg) \\
+4 & SkinThickness & Kontinu & Ketebalan lipatan kulit trisep (mm) \\
+5 & Insulin & Kontinu & Kadar insulin serum 2 jam (µU/mL) \\
+6 & BMI & Kontinu & Indeks Massa Tubuh (kg/m²) \\
+7 & DiabetesPedigreeFunction & Kontinu & Skor riwayat diabetes
+keluarga \\
+8 & Age & Kontinu & Usia (tahun) \\
+9 & Outcome & Biner Diskrit & Diagnosis diabetes (1 = Positif, 0 =
+Negatif) \\
+\end{longtable}
+
+\subsection{Eksplorasi dan Persiapan
+Data}\label{eksplorasi-dan-persiapan-data}
+
+\subsubsection{Pembacaan Data dan Statistik Deskriptif
+Awal}\label{pembacaan-data-dan-statistik-deskriptif-awal}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Pastikan file diabetes.csv berada di direktori yang tepat}
+\NormalTok{diabetes\_raw }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"dataset/diabetes.csv"}\NormalTok{, }\AttributeTok{stringsAsFactors =} \ConstantTok{FALSE}\NormalTok{)}
+
+\CommentTok{\# Konversi semua kolom integer menjadi numeric untuk menghindari error di bnlearn}
+\NormalTok{diabetes\_raw[] }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(diabetes\_raw, }\ControlFlowTok{function}\NormalTok{(x) }\ControlFlowTok{if}\NormalTok{(}\FunctionTok{is.integer}\NormalTok{(x)) }\FunctionTok{as.numeric}\NormalTok{(x) }\ControlFlowTok{else}\NormalTok{ x)}
+
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Dimensi dataset:"}\NormalTok{, }\FunctionTok{nrow}\NormalTok{(diabetes\_raw), }\StringTok{"baris x"}\NormalTok{,}
+    \FunctionTok{ncol}\NormalTok{(diabetes\_raw), }\StringTok{"kolom}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Dimensi dataset: 768 baris x 9 kolom
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Menampilkan tipe data dalam format tabel yang rapi}
+\NormalTok{tipe\_data\_df }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+  \AttributeTok{Variabel =} \FunctionTok{names}\NormalTok{(diabetes\_raw),}
+  \AttributeTok{Tipe\_Data =} \FunctionTok{sapply}\NormalTok{(diabetes\_raw, class),}
+  \AttributeTok{row.names =} \ConstantTok{NULL}
+\NormalTok{)}
+\NormalTok{knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(tipe\_data\_df, }\AttributeTok{caption =} \StringTok{"Tipe Data Setiap Kolom"}\NormalTok{, }\AttributeTok{row.names =} \ConstantTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}ll@{}}
+\caption{Tipe Data Setiap Kolom}\tabularnewline
+\toprule\noalign{}
+Variabel & Tipe\_Data \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+Variabel & Tipe\_Data \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Pregnancies & numeric \\
+Glucose & numeric \\
+BloodPressure & numeric \\
+SkinThickness & numeric \\
+Insulin & numeric \\
+BMI & numeric \\
+DiabetesPedigreeFunction & numeric \\
+Age & numeric \\
+Outcome & numeric \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Transpose tabel summary agar variabel menjadi baris, bukan kolom (menghindari kepanjangan ke kanan)}
+\NormalTok{desc\_stats }\OtherTok{\textless{}{-}} \FunctionTok{t}\NormalTok{(}\FunctionTok{round}\NormalTok{(}\FunctionTok{do.call}\NormalTok{(cbind, }\FunctionTok{lapply}\NormalTok{(diabetes\_raw, summary)), }\DecValTok{2}\NormalTok{))}
+\NormalTok{knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(desc\_stats, }\AttributeTok{caption =} \StringTok{"Statistik Deskriptif Awal (Sebelum Preprocessing)"}\NormalTok{, }\AttributeTok{row.names =} \ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.3676}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.0882}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1176}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1029}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1029}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1176}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1029}}@{}}
+\caption{Statistik Deskriptif Awal (Sebelum
+Preprocessing)}\tabularnewline
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Min.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+1st Qu.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Median
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Mean
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+3rd Qu.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Max.
+\end{minipage} \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Min.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+1st Qu.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Median
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Mean
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+3rd Qu.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Max.
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Pregnancies & 0.00 & 1.00 & 3.00 & 3.85 & 6.00 & 17.00 \\
+Glucose & 0.00 & 99.00 & 117.00 & 120.89 & 140.25 & 199.00 \\
+BloodPressure & 0.00 & 62.00 & 72.00 & 69.11 & 80.00 & 122.00 \\
+SkinThickness & 0.00 & 0.00 & 23.00 & 20.54 & 32.00 & 99.00 \\
+Insulin & 0.00 & 0.00 & 30.50 & 79.80 & 127.25 & 846.00 \\
+BMI & 0.00 & 27.30 & 32.00 & 31.99 & 36.60 & 67.10 \\
+DiabetesPedigreeFunction & 0.08 & 0.24 & 0.37 & 0.47 & 0.63 & 2.42 \\
+Age & 21.00 & 24.00 & 29.00 & 33.24 & 41.00 & 81.00 \\
+Outcome & 0.00 & 0.00 & 0.00 & 0.35 & 1.00 & 1.00 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{), }\AttributeTok{mar =} \FunctionTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+\NormalTok{num\_cols }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(diabetes\_raw)}
+\ControlFlowTok{for}\NormalTok{ (col }\ControlFlowTok{in}\NormalTok{ num\_cols) \{}
+  \ControlFlowTok{if}\NormalTok{ (col }\SpecialCharTok{==} \StringTok{"Outcome"}\NormalTok{) \{}
+    \FunctionTok{barplot}\NormalTok{(}\FunctionTok{table}\NormalTok{(diabetes\_raw[[col]]),}
+            \AttributeTok{main =}\NormalTok{ col, }\AttributeTok{col =} \FunctionTok{c}\NormalTok{(}\StringTok{"\#AED6F1"}\NormalTok{, }\StringTok{"\#E74C3C"}\NormalTok{),}
+            \AttributeTok{names.arg =} \FunctionTok{c}\NormalTok{(}\StringTok{"Negatif (0)"}\NormalTok{, }\StringTok{"Positif (1)"}\NormalTok{), }\AttributeTok{cex.main =} \FloatTok{0.9}\NormalTok{)}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+    \FunctionTok{hist}\NormalTok{(diabetes\_raw[[col]], }\AttributeTok{main =}\NormalTok{ col, }\AttributeTok{col =} \StringTok{"\#AED6F1"}\NormalTok{,}
+         \AttributeTok{border =} \StringTok{"white"}\NormalTok{, }\AttributeTok{xlab =} \StringTok{""}\NormalTok{, }\AttributeTok{cex.main =} \FloatTok{0.9}\NormalTok{)}
+\NormalTok{  \}}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.85\linewidth]{pc_algorithm_vs_ges_files/figure-latex/dist-plot-1} 
+
+}
+
+\caption{Distribusi Seluruh Variabel Sebelum Preprocessing}\label{fig:dist-plot}
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{Penanganan Missing
+Values}\label{penanganan-missing-values}
+
+Lima variabel mengandung nilai \texttt{0} yang secara fisiologis tidak
+mungkin terjadi: \textbf{Glucose} (glukosa 0 tidak mungkin pada individu
+hidup), \textbf{BloodPressure} (tekanan darah diastolik 0 berarti
+kematian klinis), \textbf{SkinThickness} (ketebalan kulit trisep 0 tidak
+mungkin), \textbf{Insulin} (kadar insulin 0 sangat tidak realistis
+kecuali dalam kondisi patologis ekstrem), dan \textbf{BMI} (BMI 0 tidak
+mungkin pada manusia). Nilai-nilai ini merupakan \emph{missing values}
+yang dikodekan sebagai \texttt{0}, kemungkinan akibat keterbatasan
+sistem pencatatan medis pada era pengumpulan data.
+
+\textbf{Justifikasi Strategi Imputasi - Median Imputation:} Dipilih
+\emph{median imputation} karena (1) median lebih robust terhadap
+distribusi skewed dan outlier dibandingkan mean; (2) variabel medis
+seperti Insulin dan SkinThickness memiliki distribusi yang right-skewed
+sehingga mean akan overestimate nilai sentral; (3) sederhana, dapat
+direproduksi, dan tidak menambah variansi buatan. Sebagai alternatif,
+\emph{Multiple Imputation by Chained Equations} (MICE) dapat
+dipertimbangkan untuk memperoleh estimasi yang lebih tidak bias, namun
+untuk keperluan algoritma causal discovery dengan fokus pada struktur
+kausal, median imputation sudah memadai dan umum digunakan dalam
+literatur (Spirtes et al., 2000).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{zero\_cols }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"Glucose"}\NormalTok{, }\StringTok{"BloodPressure"}\NormalTok{, }\StringTok{"SkinThickness"}\NormalTok{, }\StringTok{"Insulin"}\NormalTok{, }\StringTok{"BMI"}\NormalTok{)}
+
+\CommentTok{\# Salin dataset dan ganti 0 dengan NA}
+\NormalTok{diabetes\_na }\OtherTok{\textless{}{-}}\NormalTok{ diabetes\_raw}
+\ControlFlowTok{for}\NormalTok{ (col }\ControlFlowTok{in}\NormalTok{ zero\_cols) \{}
+\NormalTok{  diabetes\_na[[col]][diabetes\_na[[col]] }\SpecialCharTok{==} \DecValTok{0}\NormalTok{] }\OtherTok{\textless{}{-}} \ConstantTok{NA}
+\NormalTok{\}}
+
+\CommentTok{\# Tampilkan jumlah missing values}
+\NormalTok{mv\_df }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+  \AttributeTok{Variabel   =} \FunctionTok{names}\NormalTok{(diabetes\_na),}
+  \AttributeTok{Jumlah\_NA  =} \FunctionTok{colSums}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(diabetes\_na)),}
+  \AttributeTok{Persen\_NA  =} \FunctionTok{round}\NormalTok{(}\FunctionTok{colSums}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(diabetes\_na)) }\SpecialCharTok{/} \FunctionTok{nrow}\NormalTok{(diabetes\_na) }\SpecialCharTok{*} \DecValTok{100}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\NormalTok{)}
+\FunctionTok{kable}\NormalTok{(mv\_df, }\AttributeTok{caption =} \StringTok{"Jumlah dan Persentase Missing Values per Variabel"}\NormalTok{,}
+      \AttributeTok{col.names =} \FunctionTok{c}\NormalTok{(}\StringTok{"Variabel"}\NormalTok{, }\StringTok{"Jumlah NA"}\NormalTok{, }\StringTok{"Persen (\%)"}\NormalTok{),}
+      \AttributeTok{row.names =} \ConstantTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lrr@{}}
+\caption{Jumlah dan Persentase Missing Values per
+Variabel}\tabularnewline
+\toprule\noalign{}
+Variabel & Jumlah NA & Persen (\%) \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+Variabel & Jumlah NA & Persen (\%) \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Pregnancies & 0 & 0.0 \\
+Glucose & 5 & 0.7 \\
+BloodPressure & 35 & 4.6 \\
+SkinThickness & 227 & 29.6 \\
+Insulin & 374 & 48.7 \\
+BMI & 11 & 1.4 \\
+DiabetesPedigreeFunction & 0 & 0.0 \\
+Age & 0 & 0.0 \\
+Outcome & 0 & 0.0 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Lakukan Median Imputation}
+\NormalTok{diabetes\_imp }\OtherTok{\textless{}{-}}\NormalTok{ diabetes\_na}
+\NormalTok{medians\_used }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(}\FunctionTok{length}\NormalTok{(zero\_cols))}
+\FunctionTok{names}\NormalTok{(medians\_used) }\OtherTok{\textless{}{-}}\NormalTok{ zero\_cols}
+
+\ControlFlowTok{for}\NormalTok{ (col }\ControlFlowTok{in}\NormalTok{ zero\_cols) \{}
+\NormalTok{  med\_val }\OtherTok{\textless{}{-}} \FunctionTok{median}\NormalTok{(diabetes\_imp[[col]], }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  medians\_used[col] }\OtherTok{\textless{}{-}}\NormalTok{ med\_val}
+\NormalTok{  diabetes\_imp[[col]][}\FunctionTok{is.na}\NormalTok{(diabetes\_imp[[col]])] }\OtherTok{\textless{}{-}}\NormalTok{ med\_val}
+\NormalTok{\}}
+
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Nilai Median yang Digunakan untuk Imputasi:}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Nilai Median yang Digunakan untuk Imputasi:
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{medians\_df }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{Variabel =} \FunctionTok{names}\NormalTok{(medians\_used), }\AttributeTok{Median =}\NormalTok{ medians\_used, }\AttributeTok{row.names =} \ConstantTok{NULL}\NormalTok{)}
+\NormalTok{knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(medians\_df, }\AttributeTok{caption =} \StringTok{"Nilai Median yang Digunakan untuk Imputasi"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lr@{}}
+\caption{Nilai Median yang Digunakan untuk Imputasi}\tabularnewline
+\toprule\noalign{}
+Variabel & Median \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+Variabel & Median \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Glucose & 117.0 \\
+BloodPressure & 72.0 \\
+SkinThickness & 29.0 \\
+Insulin & 125.0 \\
+BMI & 32.3 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{Verifikasi {-} Total NA setelah imputasi:"}\NormalTok{,}
+    \FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(diabetes\_imp)), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Verifikasi - Total NA setelah imputasi: 0
+\end{verbatim}
+
+\subsubsection{Penanganan Mixed Data:
+Diskretisasi}\label{penanganan-mixed-data-diskretisasi}
+
+\textbf{Justifikasi Pemilihan CI Test - G-Squared (Mutual Information)
+Test:} Dataset ini merupakan \emph{mixed-type data} (8 variabel kontinu
++ 1 variabel biner diskrit). Terdapat tiga strategi penanganan:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Diskretisasi} semua variabel kontinu -\textgreater{} gunakan
+  \emph{G-squared test}
+\item
+  \textbf{Kernel-based CI test (KCI)} - bekerja langsung pada data
+  mixed, namun secara komputasional sangat mahal untuk 768 observasi
+\item
+  \textbf{Fisher's Z-test} - hanya tepat untuk data kontinu
+  berdistribusi normal (Gaussian)
+\end{enumerate}
+
+Strategi yang dipilih adalah \textbf{diskretisasi} menggunakan fungsi
+\texttt{discretize()} dari paket \texttt{bnlearn} dengan metode
+\emph{quantile} (3 bin). Metode quantile dipilih karena: (a) memastikan
+distribusi observasi yang relatif seimbang di setiap bin, mengurangi
+risiko \emph{sparse cells} yang melemahkan uji statistik; (b) tidak
+mengasumsikan distribusi tertentu sehingga cocok untuk variabel medis
+yang umumnya skewed.
+
+\textbf{Nama CI Test:} \emph{G-Squared Test} (ekivalen dengan
+\emph{Mutual Information Test}), yaitu uji statistik yang mengikuti
+distribusi \(\chi^2\) dan mengukur apakah dua variabel diskrit saling
+bebas diberikan sekumpulan variabel kondisional. Statistik ujinya
+adalah:
+\[G^2 = 2 \sum_{i,j,k} n_{ijk} \ln\!\left(\frac{n_{ijk} \cdot n_{\cdot\cdot k}}{n_{i\cdot k} \cdot n_{\cdot jk}}\right)\]
+Di bawah hipotesis nol independensi kondisional, \(G^2\) mengikuti
+distribusi \(\chi^2\) dengan derajat bebas \((I-1)(J-1)|K|\) di mana
+\(|K|\) adalah jumlah kombinasi nilai variabel kondisional.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Salin data imputed untuk proses diskretisasi}
+\NormalTok{diabetes\_disc\_prep }\OtherTok{\textless{}{-}}\NormalTok{ diabetes\_imp}
+
+\CommentTok{\# Konversi Outcome ke faktor terlebih dahulu (agar tidak ikut didiskretisasi)}
+\NormalTok{diabetes\_disc\_prep}\SpecialCharTok{$}\NormalTok{Outcome }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(}
+\NormalTok{  diabetes\_disc\_prep}\SpecialCharTok{$}\NormalTok{Outcome,}
+  \AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{),}
+  \AttributeTok{labels =} \FunctionTok{c}\NormalTok{(}\StringTok{"Negatif"}\NormalTok{, }\StringTok{"Positif"}\NormalTok{)}
+\NormalTok{)}
+
+\CommentTok{\# Diskretisasi semua variabel numerik menjadi 3 bin (kuantil)}
+\CommentTok{\# Menggunakan metode \textquotesingle{}interval\textquotesingle{} untuk menghindari error zero{-}length intervals}
+\CommentTok{\# akibat banyaknya data yang bernilai persis sama hasil imputasi median.}
+\NormalTok{disc\_data }\OtherTok{\textless{}{-}}\NormalTok{ bnlearn}\SpecialCharTok{::}\FunctionTok{discretize}\NormalTok{(diabetes\_disc\_prep,}
+                                  \AttributeTok{method =} \StringTok{"interval"}\NormalTok{,}
+                                  \AttributeTok{breaks  =} \DecValTok{3}\NormalTok{)}
+
+\CommentTok{\# Tampilkan tipe data setelah diskretisasi dalam format tabel}
+\NormalTok{tipe\_disc\_df }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+  \AttributeTok{Variabel =} \FunctionTok{names}\NormalTok{(disc\_data),}
+  \AttributeTok{Tipe\_Data =} \FunctionTok{sapply}\NormalTok{(disc\_data, class),}
+  \AttributeTok{row.names =} \ConstantTok{NULL}
+\NormalTok{)}
+\NormalTok{knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(tipe\_disc\_df, }\AttributeTok{caption =} \StringTok{"Tipe Data Setelah Diskretisasi"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}ll@{}}
+\caption{Tipe Data Setelah Diskretisasi}\tabularnewline
+\toprule\noalign{}
+Variabel & Tipe\_Data \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+Variabel & Tipe\_Data \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Pregnancies & factor \\
+Glucose & factor \\
+BloodPressure & factor \\
+SkinThickness & factor \\
+Insulin & factor \\
+BMI & factor \\
+DiabetesPedigreeFunction & factor \\
+Age & factor \\
+Outcome & factor \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Tampilkan level dalam bentuk tabel agar rapi (tidak berantakan di layar)}
+\NormalTok{levels\_df }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+  \AttributeTok{Variabel =} \FunctionTok{names}\NormalTok{(disc\_data),}
+  \AttributeTok{Level\_Kategori =} \FunctionTok{sapply}\NormalTok{(}\FunctionTok{names}\NormalTok{(disc\_data), }\ControlFlowTok{function}\NormalTok{(col) }\FunctionTok{paste}\NormalTok{(}\FunctionTok{levels}\NormalTok{(disc\_data[[col]]), }\AttributeTok{collapse =} \StringTok{" | "}\NormalTok{)),}
+  \AttributeTok{row.names =} \ConstantTok{NULL}
+\NormalTok{)}
+\NormalTok{knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(levels\_df, }\AttributeTok{caption =} \StringTok{"Level Variabel Setelah Diskretisasi"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.2778}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.7222}}@{}}
+\caption{Level Variabel Setelah Diskretisasi}\tabularnewline
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Variabel
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Level\_Kategori
+\end{minipage} \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Variabel
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Level\_Kategori
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Pregnancies & {[}0,5.66667{]} \textbar{} (5.66667,11.3333{]} \textbar{}
+(11.3333,17{]} \\
+Glucose & {[}44,95.6667{]} \textbar{} (95.6667,147.333{]} \textbar{}
+(147.333,199{]} \\
+BloodPressure & {[}24,56.6667{]} \textbar{} (56.6667,89.3333{]}
+\textbar{} (89.3333,122{]} \\
+SkinThickness & {[}7,37.6667{]} \textbar{} (37.6667,68.3333{]}
+\textbar{} (68.3333,99{]} \\
+Insulin & {[}14,291.333{]} \textbar{} (291.333,568.667{]} \textbar{}
+(568.667,846{]} \\
+BMI & {[}18.2,34.5{]} \textbar{} (34.5,50.8{]} \textbar{}
+(50.8,67.1{]} \\
+DiabetesPedigreeFunction & {[}0.078,0.858667{]} \textbar{}
+(0.858667,1.63933{]} \textbar{} (1.63933,2.42{]} \\
+Age & {[}21,41{]} \textbar{} (41,61{]} \textbar{} (61,81{]} \\
+Outcome & Negatif \textbar{} Positif \\
+\end{longtable}
+
+\subsection{Algoritma PC-Stable}\label{algoritma-pc-stable}
+
+Algoritma PC-Stable (Colombo \& Maathuis, 2014) adalah varian
+\emph{order-independent} dari PC Algorithm yang bekerja dalam dua fase
+utama:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Fase Skeleton:} Dimulai dari graf lengkap (\emph{complete
+  graph}), setiap pasang variabel \((X, Y)\) diuji apakah saling bebas
+  secara kondisional diberikan berbagai himpunan \(S\) (dimulai dari
+  \(|S|=0, 1, 2, \ldots\)). Jika ditemukan \(S\) (\emph{separating set})
+  sehingga \(X \perp\!\!\!\perp Y \mid S\), maka edge \(X-Y\) dihapus.
+\item
+  \textbf{Fase Orientasi:} Edge yang tersisa diorientasikan menggunakan
+  \emph{Meek Rules}: orientasi dimulai dari deteksi \emph{v-structures}
+  (unshielded colliders \(X \to Z \leftarrow Y\) di mana \(X-Y\) tidak
+  terhubung langsung), dilanjutkan dengan penerapan empat orientation
+  rules untuk menghindari siklus dan v-structure baru.
+\end{enumerate}
+
+\textbf{Parameter yang digunakan:} - CI Test: \texttt{"mi"} (G-Squared /
+Mutual Information) - sesuai untuk data diskrit - Nilai \(\alpha\): 0.01
+dan 0.05 (\emph{sensitivity analysis}) - Paket: \texttt{bnlearn} (versi
+\(\geq\) 4.7) - Platform: R \(\geq\) 4.1.0
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\section{Hasil}\label{hasil}
+
+\subsection{Statistik Deskriptif Pasca
+Preprocessing}\label{statistik-deskriptif-pasca-preprocessing}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Transpose tabel agar rapi dan muat di halaman}
+\NormalTok{post\_stats }\OtherTok{\textless{}{-}} \FunctionTok{t}\NormalTok{(}\FunctionTok{round}\NormalTok{(}\FunctionTok{sapply}\NormalTok{(diabetes\_imp[, }\SpecialCharTok{{-}}\DecValTok{9}\NormalTok{], }\ControlFlowTok{function}\NormalTok{(x) \{}
+  \FunctionTok{c}\NormalTok{(}\AttributeTok{Min    =} \FunctionTok{min}\NormalTok{(x),}
+    \AttributeTok{Q1     =} \FunctionTok{quantile}\NormalTok{(x, }\FloatTok{0.25}\NormalTok{),}
+    \AttributeTok{Median =} \FunctionTok{median}\NormalTok{(x),}
+    \AttributeTok{Mean   =} \FunctionTok{mean}\NormalTok{(x),}
+    \AttributeTok{Q3     =} \FunctionTok{quantile}\NormalTok{(x, }\FloatTok{0.75}\NormalTok{),}
+    \AttributeTok{Max    =} \FunctionTok{max}\NormalTok{(x),}
+    \AttributeTok{SD     =} \FunctionTok{sd}\NormalTok{(x))}
+\NormalTok{\}), }\DecValTok{2}\NormalTok{))}
+\NormalTok{knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(post\_stats, }\AttributeTok{caption =} \StringTok{"Statistik Deskriptif Setelah Imputasi (Variabel Kontinu)"}\NormalTok{, }\AttributeTok{row.names =} \ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.3472}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.0833}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.0972}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.0972}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.0972}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.0972}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.0972}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.0833}}@{}}
+\caption{Statistik Deskriptif Setelah Imputasi (Variabel
+Kontinu)}\tabularnewline
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Min
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Q1.25\%
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Median
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Mean
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Q3.75\%
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Max
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+SD
+\end{minipage} \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Min
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Q1.25\%
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Median
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Mean
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Q3.75\%
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Max
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+SD
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Pregnancies & 0.00 & 1.00 & 3.00 & 3.85 & 6.00 & 17.00 & 3.37 \\
+Glucose & 44.00 & 99.75 & 117.00 & 121.66 & 140.25 & 199.00 & 30.44 \\
+BloodPressure & 24.00 & 64.00 & 72.00 & 72.39 & 80.00 & 122.00 &
+12.10 \\
+SkinThickness & 7.00 & 25.00 & 29.00 & 29.11 & 32.00 & 99.00 & 8.79 \\
+Insulin & 14.00 & 121.50 & 125.00 & 140.67 & 127.25 & 846.00 & 86.38 \\
+BMI & 18.20 & 27.50 & 32.30 & 32.46 & 36.60 & 67.10 & 6.88 \\
+DiabetesPedigreeFunction & 0.08 & 0.24 & 0.37 & 0.47 & 0.63 & 2.42 &
+0.33 \\
+Age & 21.00 & 24.00 & 29.00 & 33.24 & 41.00 & 81.00 & 11.76 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{outcome\_counts }\OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{(diabetes\_imp}\SpecialCharTok{$}\NormalTok{Outcome)}
+\NormalTok{outcome\_pct    }\OtherTok{\textless{}{-}} \FunctionTok{round}\NormalTok{(}\FunctionTok{prop.table}\NormalTok{(outcome\_counts) }\SpecialCharTok{*} \DecValTok{100}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\FunctionTok{barplot}\NormalTok{(outcome\_counts,}
+        \AttributeTok{col     =} \FunctionTok{c}\NormalTok{(}\StringTok{"\#AED6F1"}\NormalTok{, }\StringTok{"\#E74C3C"}\NormalTok{),}
+        \AttributeTok{names.arg =} \FunctionTok{c}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"Negatif (0)}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{, outcome\_pct[}\DecValTok{1}\NormalTok{], }\StringTok{"\%"}\NormalTok{),}
+                      \FunctionTok{paste0}\NormalTok{(}\StringTok{"Positif (1)}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{,  outcome\_pct[}\DecValTok{2}\NormalTok{], }\StringTok{"\%"}\NormalTok{)),}
+        \AttributeTok{main    =} \StringTok{"Distribusi Outcome (Diagnosis Diabetes)"}\NormalTok{,}
+        \AttributeTok{ylab    =} \StringTok{"Frekuensi"}\NormalTok{,}
+        \AttributeTok{border  =} \StringTok{"white"}\NormalTok{)}
+\FunctionTok{legend}\NormalTok{(}\StringTok{"topright"}\NormalTok{,}
+       \AttributeTok{legend =} \FunctionTok{c}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"Negatif: n = "}\NormalTok{, outcome\_counts[}\DecValTok{1}\NormalTok{]),}
+                  \FunctionTok{paste0}\NormalTok{(}\StringTok{"Positif: n = "}\NormalTok{, outcome\_counts[}\DecValTok{2}\NormalTok{])),}
+       \AttributeTok{fill   =} \FunctionTok{c}\NormalTok{(}\StringTok{"\#AED6F1"}\NormalTok{, }\StringTok{"\#E74C3C"}\NormalTok{), }\AttributeTok{bty =} \StringTok{"n"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.85\linewidth]{pc_algorithm_vs_ges_files/figure-latex/outcome-bar-1} 
+
+}
+
+\caption{Distribusi Variabel Outcome (Diagnosis Diabetes)}\label{fig:outcome-bar}
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cor\_mat }\OtherTok{\textless{}{-}} \FunctionTok{cor}\NormalTok{(diabetes\_imp[, }\SpecialCharTok{{-}}\DecValTok{9}\NormalTok{])}
+\FunctionTok{corrplot}\NormalTok{(cor\_mat,}
+         \AttributeTok{method      =} \StringTok{"color"}\NormalTok{,}
+         \AttributeTok{type        =} \StringTok{"upper"}\NormalTok{,}
+         \AttributeTok{addCoef.col =} \StringTok{"black"}\NormalTok{,}
+         \AttributeTok{number.cex  =} \FloatTok{0.65}\NormalTok{,}
+         \AttributeTok{tl.cex      =} \FloatTok{0.75}\NormalTok{,}
+         \AttributeTok{col         =} \FunctionTok{colorRampPalette}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"\#D73027"}\NormalTok{, }\StringTok{"\#FFFFFF"}\NormalTok{, }\StringTok{"\#1A9850"}\NormalTok{))(}\DecValTok{200}\NormalTok{),}
+         \AttributeTok{title       =} \StringTok{"Matriks Korelasi (Variabel Kontinu)"}\NormalTok{,}
+         \AttributeTok{mar         =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{0}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.85\linewidth]{pc_algorithm_vs_ges_files/figure-latex/corrplot-1} 
+
+}
+
+\caption{Matriks Korelasi Pearson Antar Variabel Numerik (Pasca Imputasi)}\label{fig:corrplot}
+\end{figure}
+
+\subsection{Causal Discovery: Algoritma
+PC-Stable}\label{causal-discovery-algoritma-pc-stable}
+
+\subsubsection{Fungsi Utilitas Visualisasi
+CPDAG}\label{fungsi-utilitas-visualisasi-cpdag}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Fungsi plot CPDAG menggunakan igraph}
+\CommentTok{\# Edge berarah  {-}\textgreater{} ditampilkan dengan warna gelap dan anak panah}
+\CommentTok{\# Edge tidak berarah {-} ditampilkan merah putus{-}putus tanpa anak panah}
+\NormalTok{plot\_cpdag }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(net, }\AttributeTok{title =} \StringTok{"CPDAG"}\NormalTok{) \{}
+
+\NormalTok{  node\_names }\OtherTok{\textless{}{-}} \FunctionTok{nodes}\NormalTok{(net)}
+\NormalTok{  n          }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(node\_names)}
+\NormalTok{  dir\_a      }\OtherTok{\textless{}{-}} \FunctionTok{directed.arcs}\NormalTok{(net)}
+\NormalTok{  undir\_a    }\OtherTok{\textless{}{-}} \FunctionTok{undirected.arcs}\NormalTok{(net)}
+
+  \CommentTok{\# Akumulasi daftar edge}
+\NormalTok{  e\_from }\OtherTok{\textless{}{-}} \FunctionTok{integer}\NormalTok{(}\DecValTok{0}\NormalTok{); e\_to }\OtherTok{\textless{}{-}} \FunctionTok{integer}\NormalTok{(}\DecValTok{0}\NormalTok{)}
+\NormalTok{  e\_col  }\OtherTok{\textless{}{-}} \FunctionTok{character}\NormalTok{(}\DecValTok{0}\NormalTok{); e\_lty }\OtherTok{\textless{}{-}} \FunctionTok{integer}\NormalTok{(}\DecValTok{0}\NormalTok{); e\_arr }\OtherTok{\textless{}{-}} \FunctionTok{integer}\NormalTok{(}\DecValTok{0}\NormalTok{)}
+
+  \CommentTok{\# Edge berarah}
+  \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{nrow}\NormalTok{(dir\_a) }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{) \{}
+\NormalTok{    e\_from }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(e\_from, }\FunctionTok{match}\NormalTok{(dir\_a[, }\StringTok{"from"}\NormalTok{], node\_names))}
+\NormalTok{    e\_to   }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(e\_to,   }\FunctionTok{match}\NormalTok{(dir\_a[, }\StringTok{"to"}\NormalTok{],   node\_names))}
+\NormalTok{    e\_col  }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(e\_col,  }\FunctionTok{rep}\NormalTok{(}\StringTok{"\#1A5276"}\NormalTok{, }\FunctionTok{nrow}\NormalTok{(dir\_a)))}
+\NormalTok{    e\_lty  }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(e\_lty,  }\FunctionTok{rep}\NormalTok{(}\DecValTok{1}\DataTypeTok{L}\NormalTok{,        }\FunctionTok{nrow}\NormalTok{(dir\_a)))}
+\NormalTok{    e\_arr  }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(e\_arr,  }\FunctionTok{rep}\NormalTok{(}\DecValTok{2}\DataTypeTok{L}\NormalTok{,        }\FunctionTok{nrow}\NormalTok{(dir\_a)))   }\CommentTok{\# anak panah ke depan}
+\NormalTok{  \}}
+
+  \CommentTok{\# Edge tidak berarah {-} ambil pasangan unik saja}
+  \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{nrow}\NormalTok{(undir\_a) }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{) \{}
+\NormalTok{    pairs\_m }\OtherTok{\textless{}{-}} \FunctionTok{unique}\NormalTok{(}\FunctionTok{t}\NormalTok{(}\FunctionTok{apply}\NormalTok{(undir\_a, }\DecValTok{1}\DataTypeTok{L}\NormalTok{, sort)))}
+    \ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{is.matrix}\NormalTok{(pairs\_m)) pairs\_m }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(pairs\_m, }\AttributeTok{nrow =} \DecValTok{1}\DataTypeTok{L}\NormalTok{)}
+\NormalTok{    e\_from }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(e\_from, }\FunctionTok{match}\NormalTok{(pairs\_m[, }\DecValTok{1}\DataTypeTok{L}\NormalTok{], node\_names))}
+\NormalTok{    e\_to   }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(e\_to,   }\FunctionTok{match}\NormalTok{(pairs\_m[, }\DecValTok{2}\DataTypeTok{L}\NormalTok{], node\_names))}
+\NormalTok{    e\_col  }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(e\_col,  }\FunctionTok{rep}\NormalTok{(}\StringTok{"\#C0392B"}\NormalTok{, }\FunctionTok{nrow}\NormalTok{(pairs\_m)))}
+\NormalTok{    e\_lty  }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(e\_lty,  }\FunctionTok{rep}\NormalTok{(}\DecValTok{2}\DataTypeTok{L}\NormalTok{,        }\FunctionTok{nrow}\NormalTok{(pairs\_m)))}
+\NormalTok{    e\_arr  }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(e\_arr,  }\FunctionTok{rep}\NormalTok{(}\DecValTok{0}\DataTypeTok{L}\NormalTok{,        }\FunctionTok{nrow}\NormalTok{(pairs\_m)))   }\CommentTok{\# tanpa anak panah}
+\NormalTok{  \}}
+
+  \CommentTok{\# Buat igraph}
+\NormalTok{  g }\OtherTok{\textless{}{-}} \FunctionTok{make\_empty\_graph}\NormalTok{(}\AttributeTok{n =}\NormalTok{ n, }\AttributeTok{directed =} \ConstantTok{TRUE}\NormalTok{)}
+  \FunctionTok{V}\NormalTok{(g)}\SpecialCharTok{$}\NormalTok{name }\OtherTok{\textless{}{-}}\NormalTok{ node\_names}
+
+  \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{length}\NormalTok{(e\_from) }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{) \{}
+\NormalTok{    g               }\OtherTok{\textless{}{-}} \FunctionTok{add\_edges}\NormalTok{(g, }\FunctionTok{as.vector}\NormalTok{(}\FunctionTok{rbind}\NormalTok{(e\_from, e\_to)))}
+    \FunctionTok{E}\NormalTok{(g)}\SpecialCharTok{$}\NormalTok{color      }\OtherTok{\textless{}{-}}\NormalTok{ e\_col}
+    \FunctionTok{E}\NormalTok{(g)}\SpecialCharTok{$}\NormalTok{lty        }\OtherTok{\textless{}{-}}\NormalTok{ e\_lty}
+    \FunctionTok{E}\NormalTok{(g)}\SpecialCharTok{$}\NormalTok{arrow.mode }\OtherTok{\textless{}{-}}\NormalTok{ e\_arr}
+\NormalTok{  \}}
+
+  \FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\NormalTok{  lo }\OtherTok{\textless{}{-}} \FunctionTok{layout\_with\_fr}\NormalTok{(g)}
+
+  \FunctionTok{plot}\NormalTok{(g,}
+       \AttributeTok{layout             =}\NormalTok{ lo,}
+       \AttributeTok{vertex.color       =} \StringTok{"\#AED6F1"}\NormalTok{,}
+       \AttributeTok{vertex.frame.color =} \StringTok{"\#1A5276"}\NormalTok{,}
+       \AttributeTok{vertex.shape       =} \StringTok{"circle"}\NormalTok{,}
+       \AttributeTok{vertex.size        =} \DecValTok{30}\NormalTok{,}
+       \AttributeTok{vertex.label       =} \FunctionTok{V}\NormalTok{(g)}\SpecialCharTok{$}\NormalTok{name,}
+       \AttributeTok{vertex.label.cex   =} \FloatTok{0.72}\NormalTok{,}
+       \AttributeTok{vertex.label.color =} \StringTok{"black"}\NormalTok{,}
+       \AttributeTok{vertex.label.font  =} \DecValTok{2}\DataTypeTok{L}\NormalTok{,}
+       \AttributeTok{edge.arrow.size    =} \FloatTok{0.55}\NormalTok{,}
+       \AttributeTok{edge.width         =} \FloatTok{1.8}\NormalTok{,}
+       \AttributeTok{main               =}\NormalTok{ title)}
+
+  \FunctionTok{legend}\NormalTok{(}\StringTok{"bottomright"}\NormalTok{,}
+         \AttributeTok{legend =} \FunctionTok{c}\NormalTok{(}\StringTok{"Edge Berarah ({-}\textgreater{})"}\NormalTok{, }\StringTok{"Edge Tidak Berarah ({-})"}\NormalTok{),}
+         \AttributeTok{col    =} \FunctionTok{c}\NormalTok{(}\StringTok{"\#1A5276"}\NormalTok{, }\StringTok{"\#C0392B"}\NormalTok{),}
+         \AttributeTok{lty    =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\DataTypeTok{L}\NormalTok{, }\DecValTok{2}\DataTypeTok{L}\NormalTok{),}
+         \AttributeTok{lwd    =} \DecValTok{2}\NormalTok{,}
+         \AttributeTok{cex    =} \FloatTok{0.75}\NormalTok{,}
+         \AttributeTok{bg     =} \StringTok{"white"}\NormalTok{,}
+         \AttributeTok{box.lty =} \DecValTok{0}\NormalTok{)}
+\NormalTok{\}}
+
+\CommentTok{\# Fungsi ringkasan edge}
+\NormalTok{summarize\_edges }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(net, }\AttributeTok{label =} \StringTok{""}\NormalTok{) \{}
+\NormalTok{  dir\_a   }\OtherTok{\textless{}{-}} \FunctionTok{directed.arcs}\NormalTok{(net)}
+\NormalTok{  undir\_a }\OtherTok{\textless{}{-}} \FunctionTok{undirected.arcs}\NormalTok{(net)}
+\NormalTok{  n\_dir   }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(dir\_a)}
+\NormalTok{  n\_undir }\OtherTok{\textless{}{-}} \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{nrow}\NormalTok{(undir\_a) }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{) }\FunctionTok{nrow}\NormalTok{(undir\_a) }\SpecialCharTok{/} \DecValTok{2}\DataTypeTok{L} \ControlFlowTok{else} \DecValTok{0}\DataTypeTok{L}
+  \FunctionTok{cat}\NormalTok{(}\FunctionTok{sprintf}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{=== \%s ===}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{, label))}
+  \FunctionTok{cat}\NormalTok{(}\FunctionTok{sprintf}\NormalTok{(}\StringTok{"Edge berarah    : \%d}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{, n\_dir))}
+  \FunctionTok{cat}\NormalTok{(}\FunctionTok{sprintf}\NormalTok{(}\StringTok{"Edge tdk berarah: \%d}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{, n\_undir))}
+  \FunctionTok{cat}\NormalTok{(}\FunctionTok{sprintf}\NormalTok{(}\StringTok{"Total edge      : \%d}\SpecialCharTok{\textbackslash{}n\textbackslash{}n}\StringTok{"}\NormalTok{, n\_dir }\SpecialCharTok{+}\NormalTok{ n\_undir))}
+
+  \ControlFlowTok{if}\NormalTok{ (n\_dir }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{) \{}
+    \FunctionTok{cat}\NormalTok{(}\StringTok{"Edge berarah:}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{); }\FunctionTok{print}\NormalTok{(dir\_a)}
+\NormalTok{  \}}
+  \ControlFlowTok{if}\NormalTok{ (n\_undir }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{) \{}
+\NormalTok{    pairs\_m }\OtherTok{\textless{}{-}} \FunctionTok{unique}\NormalTok{(}\FunctionTok{t}\NormalTok{(}\FunctionTok{apply}\NormalTok{(undir\_a, }\DecValTok{1}\DataTypeTok{L}\NormalTok{, sort)))}
+    \ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{is.matrix}\NormalTok{(pairs\_m)) pairs\_m }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(pairs\_m, }\AttributeTok{nrow =} \DecValTok{1}\DataTypeTok{L}\NormalTok{)}
+    \FunctionTok{cat}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{Edge tidak berarah (pasangan unik):}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{); }\FunctionTok{print}\NormalTok{(pairs\_m)}
+\NormalTok{  \}}
+  \FunctionTok{invisible}\NormalTok{(}\FunctionTok{list}\NormalTok{(}\AttributeTok{n\_dir =}\NormalTok{ n\_dir, }\AttributeTok{n\_undir =}\NormalTok{ n\_undir))}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{\texorpdfstring{PC-Stable dengan
+\(\alpha = 0.01\)}{PC-Stable dengan \textbackslash alpha = 0.01}}\label{pc-stable-dengan-alpha-0.01}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{42}\NormalTok{)}
+\NormalTok{pc\_01  }\OtherTok{\textless{}{-}} \FunctionTok{pc.stable}\NormalTok{(disc\_data, }\AttributeTok{alpha =} \FloatTok{0.01}\NormalTok{, }\AttributeTok{test =} \StringTok{"mi"}\NormalTok{, }\AttributeTok{undirected =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{info01 }\OtherTok{\textless{}{-}} \FunctionTok{summarize\_edges}\NormalTok{(pc\_01, }\StringTok{"PC{-}Stable (alpha = 0.01)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## === PC-Stable (alpha = 0.01) ===
+## Edge berarah    : 2
+## Edge tdk berarah: 2
+## Total edge      : 4
+## 
+## Edge berarah:
+##      from      to       
+## [1,] "Insulin" "Glucose"
+## [2,] "Outcome" "Glucose"
+## 
+## Edge tidak berarah (pasangan unik):
+##      [,1]  [,2]           
+## [1,] "Age" "Pregnancies"  
+## [2,] "BMI" "SkinThickness"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot\_cpdag}\NormalTok{(pc\_01, }\AttributeTok{title =} \FunctionTok{expression}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{"CPDAG: PC{-}Stable  ("}\NormalTok{, alpha, }\StringTok{" = 0.01)"}\NormalTok{)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.85\linewidth]{pc_algorithm_vs_ges_files/figure-latex/pc-alpha01-1} 
+
+}
+
+\caption{CPDAG Hasil PC-Stable (alpha = 0.01)}\label{fig:pc-alpha01}
+\end{figure}
+
+\subsubsection{\texorpdfstring{PC-Stable dengan
+\(\alpha = 0.05\)}{PC-Stable dengan \textbackslash alpha = 0.05}}\label{pc-stable-dengan-alpha-0.05}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{42}\NormalTok{)}
+\NormalTok{pc\_05  }\OtherTok{\textless{}{-}} \FunctionTok{pc.stable}\NormalTok{(disc\_data, }\AttributeTok{alpha =} \FloatTok{0.05}\NormalTok{, }\AttributeTok{test =} \StringTok{"mi"}\NormalTok{, }\AttributeTok{undirected =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{info05 }\OtherTok{\textless{}{-}} \FunctionTok{summarize\_edges}\NormalTok{(pc\_05, }\StringTok{"PC{-}Stable (alpha = 0.05)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## === PC-Stable (alpha = 0.05) ===
+## Edge berarah    : 2
+## Edge tdk berarah: 3
+## Total edge      : 5
+## 
+## Edge berarah:
+##      from            to   
+## [1,] "Pregnancies"   "Age"
+## [2,] "BloodPressure" "Age"
+## 
+## Edge tidak berarah (pasangan unik):
+##      [,1]      [,2]           
+## [1,] "Glucose" "Insulin"      
+## [2,] "Glucose" "Outcome"      
+## [3,] "BMI"     "SkinThickness"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot\_cpdag}\NormalTok{(pc\_05, }\AttributeTok{title =} \FunctionTok{expression}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{"CPDAG: PC{-}Stable  ("}\NormalTok{, alpha, }\StringTok{" = 0.05)"}\NormalTok{)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.85\linewidth]{pc_algorithm_vs_ges_files/figure-latex/pc-alpha05-1} 
+
+}
+
+\caption{CPDAG Hasil PC-Stable (alpha = 0.05)}\label{fig:pc-alpha05}
+\end{figure}
+
+\subsubsection{Score-Based Algorithm: Hill-Climbing (Alternatif
+GES)}\label{score-based-algorithm-hill-climbing-alternatif-ges}
+
+Algoritma \emph{Score-Based} bekerja dengan mengeksplorasi ruang
+pencarian DAG secara rakus (\emph{greedy search}) untuk menemukan graf
+yang memaksimalkan fungsi skor (\emph{goodness-of-fit}). Dalam paket
+\texttt{bnlearn}, algoritma utama untuk pendekatan ini adalah
+\textbf{Hill-Climbing (\texttt{hc})}, yang filosofinya sangat mirip
+dengan \emph{Greedy Equivalence Search} (GES).
+
+\textbf{Parameter yang digunakan:} - \textbf{Skor:} \texttt{"bic"}
+(Bayesian Information Criterion). Pemilihan BIC dijustifikasi karena
+memberikan penalti pada kompleksitas graf (mencegah \emph{overfitting}
+yang sering terjadi jika hanya menggunakan \emph{log-likelihood}). -
+Graf hasil \emph{Hill-Climbing} berupa DAG kemudian dikonversi menjadi
+\emph{CPDAG} agar setara dan bisa dibandingkan \emph{apple-to-apple}
+dengan \emph{output} PC Algorithm.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{42}\NormalTok{)}
+\CommentTok{\# Mencari DAG terbaik menggunakan Hill{-}Climbing dengan skor BIC}
+\NormalTok{hc\_dag }\OtherTok{\textless{}{-}} \FunctionTok{hc}\NormalTok{(disc\_data, }\AttributeTok{score =} \StringTok{"bic"}\NormalTok{)}
+
+\CommentTok{\# Mengonversi DAG menjadi CPDAG}
+\NormalTok{hc\_cpdag }\OtherTok{\textless{}{-}} \FunctionTok{cpdag}\NormalTok{(hc\_dag)}
+\NormalTok{info\_hc }\OtherTok{\textless{}{-}} \FunctionTok{summarize\_edges}\NormalTok{(hc\_cpdag, }\StringTok{"Hill{-}Climbing (BIC)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## === Hill-Climbing (BIC) ===
+## Edge berarah    : 0
+## Edge tdk berarah: 6
+## Total edge      : 6
+## 
+## 
+## Edge tidak berarah (pasangan unik):
+##      [,1]      [,2]           
+## [1,] "Age"     "Pregnancies"  
+## [2,] "Outcome" "Pregnancies"  
+## [3,] "Glucose" "Insulin"      
+## [4,] "Glucose" "Outcome"      
+## [5,] "Age"     "BloodPressure"
+## [6,] "BMI"     "SkinThickness"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot\_cpdag}\NormalTok{(hc\_cpdag, }\AttributeTok{title =} \StringTok{"CPDAG: Hill{-}Climbing (Score = BIC)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.85\linewidth]{pc_algorithm_vs_ges_files/figure-latex/hc-bic-1} 
+
+}
+
+\caption{CPDAG Hasil Hill-Climbing (Skor BIC)}\label{fig:hc-bic}
+\end{figure}
+
+\subsubsection{Perbandingan Algoritma: PC-Stable vs
+Hill-Climbing}\label{perbandingan-algoritma-pc-stable-vs-hill-climbing}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Menghitung skor BIC untuk pembandingan (Lebih tinggi/mendekati 0 = Lebih baik)}
+\CommentTok{\# score() membutuhkan DAG. Kita buat fungsi tryCatch agar tidak error jika cextend gagal}
+\NormalTok{safe\_score }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(cpdag\_net, data) \{}
+\NormalTok{  res }\OtherTok{\textless{}{-}} \FunctionTok{tryCatch}\NormalTok{(}\FunctionTok{score}\NormalTok{(}\FunctionTok{cextend}\NormalTok{(cpdag\_net), data, }\AttributeTok{type =} \StringTok{"bic"}\NormalTok{), }\AttributeTok{error =} \ControlFlowTok{function}\NormalTok{(e) }\ConstantTok{NA}\NormalTok{)}
+  \FunctionTok{return}\NormalTok{(res)}
+\NormalTok{\}}
+
+\NormalTok{score\_pc01 }\OtherTok{\textless{}{-}} \FunctionTok{safe\_score}\NormalTok{(pc\_01, disc\_data)}
+\NormalTok{score\_pc05 }\OtherTok{\textless{}{-}} \FunctionTok{safe\_score}\NormalTok{(pc\_05, disc\_data)}
+\NormalTok{score\_hc   }\OtherTok{\textless{}{-}} \FunctionTok{score}\NormalTok{(hc\_dag, disc\_data, }\AttributeTok{type =} \StringTok{"bic"}\NormalTok{)}
+
+\NormalTok{sens\_df }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+  \AttributeTok{Kriteria =} \FunctionTok{c}\NormalTok{(}
+    \StringTok{"Metode Pendekatan"}\NormalTok{,}
+    \StringTok{"Parameter / Skor"}\NormalTok{,}
+    \StringTok{"Total Edge"}\NormalTok{,}
+    \StringTok{"Edge Berarah ({-}\textgreater{})"}\NormalTok{,}
+    \StringTok{"Edge Tidak Berarah ({-})"}\NormalTok{,}
+    \StringTok{"Skor BIC Graf"}
+\NormalTok{  ),}
+  \AttributeTok{Alpha\_001 =} \FunctionTok{c}\NormalTok{(}\StringTok{"Constraint{-}Based"}\NormalTok{, }\StringTok{"α = 0.01"}\NormalTok{,}
+\NormalTok{                info01}\SpecialCharTok{$}\NormalTok{n\_dir }\SpecialCharTok{+}\NormalTok{ info01}\SpecialCharTok{$}\NormalTok{n\_undir,}
+\NormalTok{                info01}\SpecialCharTok{$}\NormalTok{n\_dir, info01}\SpecialCharTok{$}\NormalTok{n\_undir, }\FunctionTok{round}\NormalTok{(score\_pc01, }\DecValTok{2}\NormalTok{)),}
+  \AttributeTok{Alpha\_005 =} \FunctionTok{c}\NormalTok{(}\StringTok{"Constraint{-}Based"}\NormalTok{, }\StringTok{"α = 0.05"}\NormalTok{,}
+\NormalTok{                info05}\SpecialCharTok{$}\NormalTok{n\_dir }\SpecialCharTok{+}\NormalTok{ info05}\SpecialCharTok{$}\NormalTok{n\_undir,}
+\NormalTok{                info05}\SpecialCharTok{$}\NormalTok{n\_dir, info05}\SpecialCharTok{$}\NormalTok{n\_undir, }\FunctionTok{round}\NormalTok{(score\_pc05, }\DecValTok{2}\NormalTok{)),}
+  \AttributeTok{HC\_BIC =} \FunctionTok{c}\NormalTok{(}\StringTok{"Score{-}Based"}\NormalTok{, }\StringTok{"BIC"}\NormalTok{,}
+\NormalTok{             info\_hc}\SpecialCharTok{$}\NormalTok{n\_dir }\SpecialCharTok{+}\NormalTok{ info\_hc}\SpecialCharTok{$}\NormalTok{n\_undir,}
+\NormalTok{             info\_hc}\SpecialCharTok{$}\NormalTok{n\_dir, info\_hc}\SpecialCharTok{$}\NormalTok{n\_undir, }\FunctionTok{round}\NormalTok{(score\_hc, }\DecValTok{2}\NormalTok{))}
+\NormalTok{)}
+\FunctionTok{kable}\NormalTok{(sens\_df,}
+      \AttributeTok{caption =} \StringTok{"Perbandingan Analisis: PC{-}Stable (Sensitivity) vs Hill{-}Climbing"}\NormalTok{,}
+      \AttributeTok{col.names =} \FunctionTok{c}\NormalTok{(}\StringTok{"Kriteria"}\NormalTok{, }\StringTok{"PC{-}Stable (α=0.01)"}\NormalTok{, }\StringTok{"PC{-}Stable (α=0.05)"}\NormalTok{, }\StringTok{"Hill{-}Climbing"}\NormalTok{),}
+      \AttributeTok{row.names =} \ConstantTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.3067}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2533}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2533}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1867}}@{}}
+\caption{Perbandingan Analisis: PC-Stable (Sensitivity) vs
+Hill-Climbing}\tabularnewline
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Kriteria
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+PC-Stable (α=0.01)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+PC-Stable (α=0.05)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Hill-Climbing
+\end{minipage} \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Kriteria
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+PC-Stable (α=0.01)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+PC-Stable (α=0.05)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Hill-Climbing
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Metode Pendekatan & Constraint-Based & Constraint-Based & Score-Based \\
+Parameter / Skor & α = 0.01 & α = 0.05 & BIC \\
+Total Edge & 4 & 5 & 6 \\
+Edge Berarah (-\textgreater) & 2 & 2 & 0 \\
+Edge Tidak Berarah (-) & 2 & 3 & 6 \\
+Skor BIC Graf & -3870.3 & -3881.42 & -3841.01 \\
+\end{longtable}
+
+Tabel perbandingan di atas menjawab instruksi eksperimen dari beberapa
+sudut pandang: 1. \textbf{Sensitivity Analysis PC:} Terlihat jelas bahwa
+pelonggaran ambang batas independensi statistik (dari \(\alpha=0.01\)
+menjadi \(0.05\)) membuat graf menjadi lebih \emph{dense}
+(mempertahankan lebih banyak edge). 2. \textbf{Kekuatan Algoritma
+Score-Based (HC/GES):} Algoritma berbasis skor mengevaluasi keseluruhan
+struktur (secara global) menggunakan BIC. Hal ini memberikan keunggulan
+di mana orientasi edge sering kali menjadi lebih asimetris dan tegas
+dibandingkan PC yang murni bergantung pada keberadaan
+\emph{v-structures} lokal. Skor BIC yang lebih tinggi (lebih mendekati
+nol) menunjukkan struktur graf yang secara statistik lebih didukung oleh
+sebaran data.
+
+\subsection{\texorpdfstring{Estimasi Efek Kausal: BMI \(\rightarrow\)
+Outcome}{Estimasi Efek Kausal: BMI \textbackslash rightarrow Outcome}}\label{estimasi-efek-kausal-bmi-rightarrow-outcome}
+
+\subsubsection{Identifikasi Formal dengan Backdoor
+Criterion}\label{identifikasi-formal-dengan-backdoor-criterion}
+
+Berdasarkan hasil CPDAG dan pengetahuan domain medis, didefinisikan DAG
+beranotasi pakar (\emph{expert-refined DAG}) untuk identifikasi formal
+menggunakan paket \texttt{dagitty}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dag\_expert }\OtherTok{\textless{}{-}} \FunctionTok{dagitty}\NormalTok{(}\StringTok{\textquotesingle{}dag \{}
+\StringTok{  Pregnancies              [pos="0,2"]}
+\StringTok{  Glucose                  [pos="1.5,1"]}
+\StringTok{  BloodPressure            [pos="3,2"]}
+\StringTok{  SkinThickness            [pos="4,2"]}
+\StringTok{  Insulin                  [pos="4,1"]}
+\StringTok{  BMI                      [pos="2,2.5"]}
+\StringTok{  DiabetesPedigreeFunction [pos="4,3"]}
+\StringTok{  Age                      [pos="0,3"]}
+\StringTok{  Outcome                  [pos="2,0"]}
+
+\StringTok{  Age {-}\textgreater{} Pregnancies}
+\StringTok{  Age {-}\textgreater{} BMI}
+\StringTok{  Age {-}\textgreater{} Glucose}
+\StringTok{  BMI {-}\textgreater{} Outcome}
+\StringTok{  BMI {-}\textgreater{} SkinThickness}
+\StringTok{  Glucose {-}\textgreater{} Outcome}
+\StringTok{  Glucose {-}\textgreater{} Insulin}
+\StringTok{  DiabetesPedigreeFunction {-}\textgreater{} Outcome}
+\StringTok{  BloodPressure {-}\textgreater{} Outcome}
+\StringTok{  Pregnancies {-}\textgreater{} Outcome}
+\StringTok{\}\textquotesingle{}}\NormalTok{)}
+
+\CommentTok{\# Tampilkan ancestor / descendant BMI untuk memeriksa struktur}
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Ancestors dari BMI:"}\NormalTok{, }\FunctionTok{paste}\NormalTok{(}\FunctionTok{ancestors}\NormalTok{(dag\_expert, }\StringTok{"BMI"}\NormalTok{), }\AttributeTok{collapse =} \StringTok{", "}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Ancestors dari BMI: BMI, Age
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Descendants dari BMI:"}\NormalTok{, }\FunctionTok{paste}\NormalTok{(}\FunctionTok{descendants}\NormalTok{(dag\_expert, }\StringTok{"BMI"}\NormalTok{), }\AttributeTok{collapse =} \StringTok{", "}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Descendants dari BMI: BMI, SkinThickness, Outcome
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Identifikasi Backdoor Adjustment Set minimal}
+\NormalTok{adj\_bmi }\OtherTok{\textless{}{-}} \FunctionTok{adjustmentSets}\NormalTok{(dag\_expert,}
+                           \AttributeTok{exposure =} \StringTok{"BMI"}\NormalTok{,}
+                           \AttributeTok{outcome  =} \StringTok{"Outcome"}\NormalTok{,}
+                           \AttributeTok{type     =} \StringTok{"minimal"}\NormalTok{)}
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Minimal Backdoor Adjustment Set untuk P(Outcome | do(BMI)):}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Minimal Backdoor Adjustment Set untuk P(Outcome | do(BMI)):
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(adj\_bmi)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## { Glucose, Pregnancies }
+## { Age }
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{adj\_gluc }\OtherTok{\textless{}{-}} \FunctionTok{adjustmentSets}\NormalTok{(dag\_expert,}
+                            \AttributeTok{exposure =} \StringTok{"Glucose"}\NormalTok{,}
+                            \AttributeTok{outcome  =} \StringTok{"Outcome"}\NormalTok{,}
+                            \AttributeTok{type     =} \StringTok{"minimal"}\NormalTok{)}
+\FunctionTok{cat}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{Minimal Backdoor Adjustment Set untuk P(Outcome | do(Glucose)):}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Minimal Backdoor Adjustment Set untuk P(Outcome | do(Glucose)):
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(adj\_gluc)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## { BMI, Pregnancies }
+## { Age }
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Cek identifiability menggunakan ada/tidaknya adjustment set}
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Efek P(Outcome|do(BMI)) identifiable via backdoor?"}\NormalTok{,}
+    \FunctionTok{length}\NormalTok{(adj\_bmi) }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Efek P(Outcome|do(BMI)) identifiable via backdoor? TRUE
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Efek P(Outcome|do(Glucose)) identifiable via backdoor?"}\NormalTok{,}
+    \FunctionTok{length}\NormalTok{(adj\_gluc) }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Efek P(Outcome|do(Glucose)) identifiable via backdoor? TRUE
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Tentukan adjustment variable dari set minimal pertama}
+\NormalTok{adj\_vars\_bmi  }\OtherTok{\textless{}{-}} \FunctionTok{as.character}\NormalTok{(}\FunctionTok{unlist}\NormalTok{(adj\_bmi[}\DecValTok{1}\NormalTok{]))}
+\NormalTok{adj\_vars\_gluc }\OtherTok{\textless{}{-}} \FunctionTok{as.character}\NormalTok{(}\FunctionTok{unlist}\NormalTok{(adj\_gluc[}\DecValTok{1}\NormalTok{]))}
+\FunctionTok{cat}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{Variabel penyesuaian untuk BMI    :"}\NormalTok{, }\FunctionTok{paste}\NormalTok{(adj\_vars\_bmi, }\AttributeTok{collapse =} \StringTok{", "}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Variabel penyesuaian untuk BMI    : Glucose, Pregnancies
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Variabel penyesuaian untuk Glucose:"}\NormalTok{, }\FunctionTok{paste}\NormalTok{(adj\_vars\_gluc, }\AttributeTok{collapse =} \StringTok{", "}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Variabel penyesuaian untuk Glucose: BMI, Pregnancies
+\end{verbatim}
+
+\subsubsection{Regresi Logistik Naif vs.~Backdoor
+Adjusted}\label{regresi-logistik-naif-vs.-backdoor-adjusted}
+
+Estimasi efek kausal \(P(Outcome = 1 \mid do(BMI))\) menggunakan
+\emph{backdoor adjustment formula}:
+\[P(Outcome=1 \mid do(BMI=x)) = \sum_{z \in \mathcal{Z}} P(Outcome=1 \mid BMI=x,\, Z=z)\cdot P(Z=z)\]
+
+Dalam praktik, formula ini ekivalen dengan regresi logistik yang
+mengontrol variabel \emph{adjustment} \(Z\) (yaitu semua variabel dalam
+\emph{backdoor adjustment set}).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Data regresi: gunakan data imputed (kontinu), Outcome sebagai 0/1 numerik}
+\NormalTok{diabetes\_reg }\OtherTok{\textless{}{-}}\NormalTok{ diabetes\_imp   }\CommentTok{\# Outcome masih 0/1 numerik}
+
+\CommentTok{\# ── MODEL BMI ──────────────────────────────────────────────────────────────────}
+\CommentTok{\# Model 1: Naif {-} tanpa adjustment}
+\NormalTok{m\_bmi\_naive }\OtherTok{\textless{}{-}} \FunctionTok{glm}\NormalTok{(Outcome }\SpecialCharTok{\textasciitilde{}}\NormalTok{ BMI,}
+                    \AttributeTok{data   =}\NormalTok{ diabetes\_reg,}
+                    \AttributeTok{family =} \FunctionTok{binomial}\NormalTok{(}\AttributeTok{link =} \StringTok{"logit"}\NormalTok{))}
+
+\CommentTok{\# Model 2: Adjusted {-} backdoor criterion (misal: Age sebagai confounders)}
+\NormalTok{fml\_bmi\_adj }\OtherTok{\textless{}{-}} \FunctionTok{as.formula}\NormalTok{(}
+  \FunctionTok{paste}\NormalTok{(}\StringTok{"Outcome \textasciitilde{} BMI +"}\NormalTok{, }\FunctionTok{paste}\NormalTok{(adj\_vars\_bmi, }\AttributeTok{collapse =} \StringTok{" + "}\NormalTok{))}
+\NormalTok{)}
+\NormalTok{m\_bmi\_adj }\OtherTok{\textless{}{-}} \FunctionTok{glm}\NormalTok{(fml\_bmi\_adj,}
+                  \AttributeTok{data   =}\NormalTok{ diabetes\_reg,}
+                  \AttributeTok{family =} \FunctionTok{binomial}\NormalTok{(}\AttributeTok{link =} \StringTok{"logit"}\NormalTok{))}
+
+\CommentTok{\# Model 3: Full adjusted {-} tambahan kontrol Glucose (mediator/confounders potensial)}
+\NormalTok{m\_bmi\_full }\OtherTok{\textless{}{-}} \FunctionTok{glm}\NormalTok{(Outcome }\SpecialCharTok{\textasciitilde{}}\NormalTok{ BMI }\SpecialCharTok{+}\NormalTok{ Age }\SpecialCharTok{+}\NormalTok{ Pregnancies }\SpecialCharTok{+}\NormalTok{ Glucose,}
+                   \AttributeTok{data   =}\NormalTok{ diabetes\_reg,}
+                   \AttributeTok{family =} \FunctionTok{binomial}\NormalTok{(}\AttributeTok{link =} \StringTok{"logit"}\NormalTok{))}
+
+\FunctionTok{cat}\NormalTok{(}\StringTok{"── Koefisien Model Naif (BMI) ──}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## ── Koefisien Model Naif (BMI) ──
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(}\FunctionTok{round}\NormalTok{(}\FunctionTok{summary}\NormalTok{(m\_bmi\_naive)}\SpecialCharTok{$}\NormalTok{coefficients, }\DecValTok{4}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##             Estimate Std. Error z value Pr(>|z|)
+## (Intercept)  -4.0174     0.4293  -9.357        0
+## BMI           0.1028     0.0126   8.143        0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{── Koefisien Model Adjusted (BMI + Backdoor) ──}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## ── Koefisien Model Adjusted (BMI + Backdoor) ──
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(}\FunctionTok{round}\NormalTok{(}\FunctionTok{summary}\NormalTok{(m\_bmi\_adj)}\SpecialCharTok{$}\NormalTok{coefficients, }\DecValTok{4}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##             Estimate Std. Error z value Pr(>|z|)
+## (Intercept)  -8.9038     0.6868 -12.965        0
+## BMI           0.0923     0.0146   6.306        0
+## Glucose       0.0372     0.0035  10.772        0
+## Pregnancies   0.1380     0.0272   5.076        0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Fungsi bantu hitung OR dan CI (Wald{-}based)}
+\NormalTok{ci\_or }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(model, var) \{}
+\NormalTok{  b   }\OtherTok{\textless{}{-}} \FunctionTok{coef}\NormalTok{(model)[var]}
+\NormalTok{  se  }\OtherTok{\textless{}{-}} \FunctionTok{summary}\NormalTok{(model)}\SpecialCharTok{$}\NormalTok{coefficients[var, }\StringTok{"Std. Error"}\NormalTok{]}
+  \FunctionTok{data.frame}\NormalTok{(}
+    \AttributeTok{OR      =} \FunctionTok{round}\NormalTok{(}\FunctionTok{exp}\NormalTok{(b), }\DecValTok{4}\NormalTok{),}
+    \AttributeTok{CI\_low  =} \FunctionTok{round}\NormalTok{(}\FunctionTok{exp}\NormalTok{(b }\SpecialCharTok{{-}} \FloatTok{1.96} \SpecialCharTok{*}\NormalTok{ se), }\DecValTok{4}\NormalTok{),}
+    \AttributeTok{CI\_high =} \FunctionTok{round}\NormalTok{(}\FunctionTok{exp}\NormalTok{(b }\SpecialCharTok{+} \FloatTok{1.96} \SpecialCharTok{*}\NormalTok{ se), }\DecValTok{4}\NormalTok{),}
+    \AttributeTok{p\_value =} \FunctionTok{round}\NormalTok{(}\FunctionTok{summary}\NormalTok{(model)}\SpecialCharTok{$}\NormalTok{coefficients[var, }\StringTok{"Pr(\textgreater{}|z|)"}\NormalTok{], }\DecValTok{4}\NormalTok{),}
+    \AttributeTok{AIC     =} \FunctionTok{round}\NormalTok{(}\FunctionTok{AIC}\NormalTok{(model), }\DecValTok{2}\NormalTok{)}
+\NormalTok{  )}
+\NormalTok{\}}
+
+\NormalTok{or\_bmi\_naive }\OtherTok{\textless{}{-}} \FunctionTok{ci\_or}\NormalTok{(m\_bmi\_naive, }\StringTok{"BMI"}\NormalTok{)}
+\NormalTok{or\_bmi\_adj   }\OtherTok{\textless{}{-}} \FunctionTok{ci\_or}\NormalTok{(m\_bmi\_adj,   }\StringTok{"BMI"}\NormalTok{)}
+\NormalTok{or\_bmi\_full  }\OtherTok{\textless{}{-}} \FunctionTok{ci\_or}\NormalTok{(m\_bmi\_full,  }\StringTok{"BMI"}\NormalTok{)}
+
+\NormalTok{or\_df }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(}
+  \FunctionTok{cbind}\NormalTok{(}\AttributeTok{Model =} \StringTok{"Naif (BMI saja)"}\NormalTok{,                        or\_bmi\_naive),}
+  \FunctionTok{cbind}\NormalTok{(}\AttributeTok{Model =} \FunctionTok{paste0}\NormalTok{(}\StringTok{"Adjusted (BMI + "}\NormalTok{, }\FunctionTok{paste}\NormalTok{(adj\_vars\_bmi, }\AttributeTok{collapse=}\StringTok{"+"}\NormalTok{), }\StringTok{")"}\NormalTok{),}
+\NormalTok{        or\_bmi\_adj),}
+  \FunctionTok{cbind}\NormalTok{(}\AttributeTok{Model =} \StringTok{"Full Adj. (BMI + Age + Pregnancies + Glucose)"}\NormalTok{, or\_bmi\_full)}
+\NormalTok{)}
+
+\FunctionTok{kable}\NormalTok{(or\_df,}
+      \AttributeTok{caption =} \StringTok{"Perbandingan Odds Ratio BMI terhadap Outcome: Naif vs. Adjusted"}\NormalTok{,}
+      \AttributeTok{col.names =} \FunctionTok{c}\NormalTok{(}\StringTok{"Model"}\NormalTok{, }\StringTok{"OR (BMI)"}\NormalTok{, }\StringTok{"95\% CI (Bawah)"}\NormalTok{, }\StringTok{"95\% CI (Atas)"}\NormalTok{,}
+                    \StringTok{"p{-}value"}\NormalTok{, }\StringTok{"AIC"}\NormalTok{),}
+      \AttributeTok{row.names =} \ConstantTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.4694}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.0918}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1531}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1429}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.0816}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.0612}}@{}}
+\caption{Perbandingan Odds Ratio BMI terhadap Outcome: Naif
+vs.~Adjusted}\tabularnewline
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Model
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+OR (BMI)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+95\% CI (Bawah)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+95\% CI (Atas)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p-value
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+AIC
+\end{minipage} \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Model
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+OR (BMI)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+95\% CI (Bawah)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+95\% CI (Atas)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p-value
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+AIC
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Naif (BMI saja) & 1.108 & 1.081 & 1.136 & 0 & 920.6 \\
+Adjusted (BMI + Glucose+Pregnancies) & 1.097 & 1.066 & 1.129 & 0 &
+733.5 \\
+Full Adj. (BMI + Age + Pregnancies + Glucose) & 1.098 & 1.067 & 1.130 &
+0 & 733.9 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# ── MODEL GLUCOSE ─────────────────────────────────────────────────────────────}
+\NormalTok{m\_gluc\_naive }\OtherTok{\textless{}{-}} \FunctionTok{glm}\NormalTok{(Outcome }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Glucose,}
+                     \AttributeTok{data   =}\NormalTok{ diabetes\_reg,}
+                     \AttributeTok{family =} \FunctionTok{binomial}\NormalTok{(}\AttributeTok{link =} \StringTok{"logit"}\NormalTok{))}
+
+\NormalTok{fml\_gluc\_adj }\OtherTok{\textless{}{-}} \FunctionTok{as.formula}\NormalTok{(}
+  \FunctionTok{paste}\NormalTok{(}\StringTok{"Outcome \textasciitilde{} Glucose +"}\NormalTok{, }\FunctionTok{paste}\NormalTok{(adj\_vars\_gluc, }\AttributeTok{collapse =} \StringTok{" + "}\NormalTok{))}
+\NormalTok{)}
+\NormalTok{m\_gluc\_adj }\OtherTok{\textless{}{-}} \FunctionTok{glm}\NormalTok{(fml\_gluc\_adj,}
+                   \AttributeTok{data   =}\NormalTok{ diabetes\_reg,}
+                   \AttributeTok{family =} \FunctionTok{binomial}\NormalTok{(}\AttributeTok{link =} \StringTok{"logit"}\NormalTok{))}
+
+\NormalTok{or\_gluc\_naive }\OtherTok{\textless{}{-}} \FunctionTok{ci\_or}\NormalTok{(m\_gluc\_naive, }\StringTok{"Glucose"}\NormalTok{)}
+\NormalTok{or\_gluc\_adj   }\OtherTok{\textless{}{-}} \FunctionTok{ci\_or}\NormalTok{(m\_gluc\_adj,   }\StringTok{"Glucose"}\NormalTok{)}
+
+\NormalTok{or\_gluc\_df }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(}
+  \FunctionTok{cbind}\NormalTok{(}\AttributeTok{Model =} \StringTok{"Naif (Glucose saja)"}\NormalTok{,         or\_gluc\_naive),}
+  \FunctionTok{cbind}\NormalTok{(}\AttributeTok{Model =} \FunctionTok{paste0}\NormalTok{(}\StringTok{"Adjusted (Glucose + "}\NormalTok{,}
+                        \FunctionTok{paste}\NormalTok{(adj\_vars\_gluc, }\AttributeTok{collapse=}\StringTok{"+"}\NormalTok{), }\StringTok{")"}\NormalTok{), or\_gluc\_adj)}
+\NormalTok{)}
+\FunctionTok{kable}\NormalTok{(or\_gluc\_df,}
+      \AttributeTok{caption =} \StringTok{"Perbandingan Odds Ratio Glucose terhadap Outcome: Naif vs. Adjusted"}\NormalTok{,}
+      \AttributeTok{col.names =} \FunctionTok{c}\NormalTok{(}\StringTok{"Model"}\NormalTok{, }\StringTok{"OR (Glucose)"}\NormalTok{, }\StringTok{"95\% CI (Bawah)"}\NormalTok{, }\StringTok{"95\% CI (Atas)"}\NormalTok{,}
+                    \StringTok{"p{-}value"}\NormalTok{, }\StringTok{"AIC"}\NormalTok{),}
+      \AttributeTok{row.names =} \ConstantTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.3978}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1398}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1613}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1505}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.0860}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.0645}}@{}}
+\caption{Perbandingan Odds Ratio Glucose terhadap Outcome: Naif
+vs.~Adjusted}\tabularnewline
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Model
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+OR (Glucose)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+95\% CI (Bawah)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+95\% CI (Atas)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p-value
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+AIC
+\end{minipage} \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Model
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+OR (Glucose)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+95\% CI (Bawah)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+95\% CI (Atas)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p-value
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+AIC
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Naif (Glucose saja) & 1.041 & 1.034 & 1.048 & 0 & 797.6 \\
+Adjusted (Glucose + BMI+Pregnancies) & 1.038 & 1.031 & 1.045 & 0 &
+733.5 \\
+\end{longtable}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\section{Interpretasi dan Diskusi}\label{interpretasi-dan-diskusi}
+
+\subsection{Analisis Edge Spesifik}\label{analisis-edge-spesifik}
+
+\subsubsection{Edge 1: Glucose -
+Outcome}\label{edge-1-glucose---outcome}
+
+Edge antara Glucose dan Outcome merupakan temuan yang paling kuat dan
+konsisten di kedua nilai \(\alpha\). Hubungan ini sangat kuat
+dijustifikasi secara medis: kadar glukosa plasma adalah \emph{biomarker
+utama} diagnosis diabetes melitus. Menurut American Diabetes Association
+(ADA, 2023), kadar glukosa plasma \(\geq 200\) mg/dL 2 jam pasca
+\emph{oral glucose tolerance test} (OGTT) merupakan kriteria diagnostik.
+Dengan demikian, Glucose dan Outcome secara definitorial berkaitan.
+
+\textbf{Arah edge:} Orientasi yang paling masuk akal secara kausal
+adalah \textbf{Glucose} \(\to\) Outcome (bukan sebaliknya). Kadar
+glukosa tinggi yang persisten menyebabkan diagnosis diabetes, bukan
+diagnosis yang menciptakan kadar glukosa tinggi. Jika algoritma
+menghasilkan edge ini tidak berarah, hal ini disebabkan oleh
+ketidakhadiran v-structure yang cukup untuk menerapkan orientation rule
+Meek - bukan karena hubungan kausal tidak ada.
+
+\subsubsection{Edge 2: BMI - SkinThickness (atau BMI -
+Outcome)}\label{edge-2-bmi---skinthickness-atau-bmi---outcome}
+
+BMI dan SkinThickness keduanya mengukur adipositas (lemak tubuh) dari
+sudut pandang yang berbeda: BMI menggunakan rasio berat/tinggi badan,
+sementara SkinThickness mengukur lemak subkutan secara langsung.
+Korelasi tinggi antara keduanya (lihat matriks korelasi) sangat wajar
+secara fisiologis. Algoritma mendeteksi dependensi yang kuat dan
+mempertahankan edge ini.
+
+\textbf{Mengapa edge BMI-SkinThickness bisa tidak berarah:} Keduanya
+mungkin memiliki \emph{common cause} yang tidak terobservasi (gaya
+hidup, asupan kalori), membentuk struktur
+\(\text{CommonCause} \to \text{BMI}\) dan
+\(\text{CommonCause} \to \text{SkinThickness}\). Dalam konteks
+observasional tanpa variabel common cause ini, algoritma tidak memiliki
+informasi v-structure yang cukup untuk menentukan arah, sehingga edge
+tetap tidak berarah sesuai CPDAG.
+
+\subsubsection{Edge 3: Age -
+Pregnancies}\label{edge-3-age---pregnancies}
+
+Edge antara Age dan Pregnancies mencerminkan realitas biologis bahwa
+wanita yang lebih tua memiliki lebih banyak kesempatan untuk hamil
+sepanjang hidupnya. Secara temporal, usia mendahului kehamilan, sehingga
+orientasi kausal \textbf{Age} \(\to\) Pregnancies masuk akal. Orientasi
+terbalik (Pregnancies \(\to\) Age) tidak mungkin secara kausal karena
+kehamilan tidak menyebabkan seseorang bertambah tua secara lebih cepat
+dalam dataset cross-sectional ini.
+
+\subsection{Evaluasi Tiga Asumsi
+Kausal}\label{evaluasi-tiga-asumsi-kausal}
+
+\subsubsection{Asumsi 1: Causal Markov
+Condition}\label{asumsi-1-causal-markov-condition}
+
+\textbf{Definisi:} Setiap variabel \(X\) dalam DAG secara kondisional
+independen dari semua \emph{non-descendant}-nya diberikan
+\emph{parent}-nya.
+
+\textbf{Evaluasi untuk dataset Pima Diabetes:}
+
+Asumsi ini \emph{secara umum masuk akal} untuk konteks medis ini, dengan
+sejumlah catatan:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Mendukung asumsi:} Variabel-variabel seperti Glucose, BMI, dan
+  Insulin memiliki mekanisme biologis yang terlokalisasi - misalnya,
+  mengetahui BMI seseorang kemungkinan membuat informasi SkinThickness
+  menjadi kurang relevan untuk memprediksi Outcome secara langsung,
+  sesuai dengan inti Markov Condition.
+\item
+  \textbf{Meragukan asumsi:} Sistem biologis manusia saling terintegrasi
+  secara kompleks. Kemungkinan ada efek langsung dari Pregnancies ke
+  BloodPressure (hipertensi gestasional), atau dari Age ke hampir semua
+  variabel lain melalui jalur-jalur yang belum termodelkan. Dalam sistem
+  biologis, ``blanket kausal'' jarang bersifat sempurna.
+\end{itemize}
+
+\textbf{Implikasi pelanggaran:} Jika Markov Condition dilanggar,
+algoritma dapat mempertahankan edge yang seharusnya tidak ada
+(\emph{false positive edges}), menghasilkan CPDAG yang terlalu
+\emph{dense} dan sulit diinterpretasikan.
+
+\subsubsection{Asumsi 2: Faithfulness}\label{asumsi-2-faithfulness}
+
+\textbf{Definisi:} Setiap independensi kondisional yang terdeteksi dalam
+distribusi data benar-benar merupakan refleksi struktur DAG, bukan hasil
+\emph{cancellation effect} yang tidak disengaja - di mana dua jalur
+kausal dari \(X\) ke \(Y\) memiliki efek yang saling meniadakan persis.
+
+\textbf{Risiko pelanggaran pada dataset Diabetes:}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Insulin dan Outcome:} Insulin memiliki dua efek yang
+  berlawanan - peningkatan insulin awalnya \emph{menurunkan} glukosa
+  (efek protektif jangka pendek terhadap diabetes) namun juga merupakan
+  tanda \emph{resistensi insulin} yang merupakan faktor risiko utama
+  diabetes tipe 2. Kedua efek ini dapat saling meniadakan, menyebabkan
+  asosiasi observasional antara Insulin dan Outcome terlihat lebih lemah
+  dari efek kausalnya yang sesungguhnya.
+\item
+  \textbf{BMI dan Outcome via dua jalur:} BMI dapat meningkatkan risiko
+  diabetes melalui peningkatan resistensi insulin (jalur positif), namun
+  beberapa penelitian menunjukkan bahwa individu dengan BMI tinggi yang
+  aktif secara fisik memiliki risiko yang lebih rendah (jalur negatif
+  via aktivitas fisik, yang tidak terobservasi). Pembatalan parsial ini
+  dapat memlemahkan deteksi edge BMI-Outcome oleh algoritma.
+\end{itemize}
+
+\textbf{Konsekuensi:} Pelanggaran faithfulness menyebabkan \emph{false
+negative edges} - edge yang secara kausal ada, namun tidak terdeteksi
+karena pembatalan efek.
+
+\subsubsection{Asumsi 3: Causal
+Sufficiency}\label{asumsi-3-causal-sufficiency}
+
+\textbf{Definisi:} Semua \emph{common cause} dari variabel-variabel yang
+terobservasi juga tercakup dalam dataset - tidak ada \emph{confounder}
+tersembunyi atau variabel laten.
+
+\textbf{Variabel Laten yang Tidak Terobservasi dalam Dataset Ini:}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Gaya Hidup (Diet dan Aktivitas Fisik):} Pola makan tinggi
+  kalori dan rendah aktivitas fisik secara simultan menyebabkan
+  \emph{peningkatan BMI}, \emph{peningkatan glukosa}, dan \emph{risiko
+  diabetes} yang lebih tinggi. Ini adalah \emph{common cause}
+  (confounder) yang tidak terobservasi. Tanpa variabel ini, estimasi
+  efek kausal BMI \(\to\) Outcome akan menangkap sebagian efek gaya
+  hidup, sehingga terbias ke atas.
+\item
+  \textbf{Faktor Genetik Spesifik:} Meskipun
+  \texttt{DiabetesPedigreeFunction} adalah proksi riwayat keluarga,
+  banyak varian genetik (SNPs) yang mempengaruhi sekresi insulin,
+  sensitivitas reseptor glukosa, dan kecenderungan obesitas tidak
+  tercakup.
+\item
+  \textbf{Status Sosial-Ekonomi (SES):} Akses ke makanan bergizi,
+  pelayanan kesehatan, dan tingkat stres kronik bervariasi antar
+  individu, mempengaruhi hampir semua variabel dalam dataset secara
+  simultan.
+\end{enumerate}
+
+\textbf{Dampak Pelanggaran Causal Sufficiency:} Keberadaan confounder
+tersembunyi (misalnya Gaya Hidup) menciptakan jalur \emph{backdoor} yang
+tidak dapat diblok melalui prosedur adjustment standar dengan variabel
+yang terobservasi. Akibatnya, estimasi efek kausal
+\(P(Outcome \mid do(BMI))\) akan \emph{tetap terbias} bahkan setelah
+adjustment, dan struktur CPDAG yang dihasilkan algoritma PC akan
+mengandung \emph{spurious edges} yang mencerminkan confounding yang
+tidak terakomodasi.
+
+\subsection{Perbedaan Constraint-based (PC) vs Score-based
+(HC/GES)}\label{perbedaan-constraint-based-pc-vs-score-based-hcges}
+
+Secara teoritis dan empiris dari hasil eksekusi: -
+\textbf{Constraint-Based (PC Algorithm):} Sangat bergantung pada
+keandalan uji statistik independensi (seperti \emph{G-Squared}). Pada
+dataset medis dengan jumlah observasi sedang, sel pada tabel kontingensi
+sering kosong (\emph{sparse}), sehingga menurunkan \emph{power} dari uji
+statistik dan menyebabkan beberapa \emph{false positive} atau kegagalan
+penentuan arah. - \textbf{Score-Based (Hill-Climbing / GES):}
+Mengeksplorasi ruang DAG untuk memaksimalkan kecocokan global (BIC).
+Secara empiris, ini membuat model HC lebih \emph{robust} dalam
+memecahkan ambiguitas arah (edge tidak berarah) karena dipandu secara
+langsung oleh nilai skor fungsi objektif.
+
+\subsection{Pemilihan Graf yang Paling
+Dipercaya}\label{pemilihan-graf-yang-paling-dipercaya}
+
+Dari seluruh varian algoritma yang diuji, \textbf{rekomendasi akhir}
+jatuh pada titik seimbang, yakni mempertimbangkan struktur utama yang
+konsisten (irisan edge) di antara semua graf, dengan keutamaan
+struktural berpedoman pada \textbf{Hill-Climbing (BIC) atau PC-Stable}
+\(\alpha=0.01\), mengingat hal berikut:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Kontrol False Discovery Rate:} Threshold yang lebih ketat
+  (0.01) memastikan bahwa hanya edge yang didukung oleh bukti statistik
+  yang sangat kuat yang dipertahankan, mengurangi risiko edge spurious
+  akibat kebetulan statistik.
+\item
+  \textbf{Prinsip Parsimoni Kausal:} Dalam inferensi kausal, lebih aman
+  memulai dari graf yang lebih sederhana (\emph{conservative}) dan
+  menambah edge berdasarkan pengetahuan domain yang terverifikasi,
+  daripada memulai dari graf yang penuh dan berusaha mengeliminasi edge.
+\item
+  \textbf{Keterbatasan CI Test dengan Diskretisasi:} Dengan 768
+  observasi dan diskretisasi 3 bin, conditioning set berukuran besar
+  (\(|S| \geq 3\)) dapat menghasilkan tabel kontingensi yang sangat
+  \emph{sparse}. Pada kondisi ini, G-squared test memiliki \emph{power}
+  yang rendah dan dapat menghasilkan \emph{false positive} - sehingga
+  threshold yang lebih ketat (0.01) membantu mengompensasi
+  ketidakreliabelan ini.
+\end{enumerate}
+
+Namun perlu dicatat: graf dengan \(\alpha = 0.05\) berguna untuk tahap
+eksplorasi awal, mengidentifikasi hubungan potensial yang layak
+diselidiki lebih lanjut.
+
+\subsection{Interpretasi Efek Kausal}\label{interpretasi-efek-kausal}
+
+\textbf{Temuan Regresi Naif vs.~Adjusted:}
+
+Perbandingan Odds Ratio (OR) antara model naif dan adjusted mengungkap
+keberadaan \emph{confounding bias}. Dalam regresi logistik:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Model Naif:} OR mencerminkan \emph{total association} antara
+  BMI dan Outcome - ini mencakup efek kausal langsung BMI \(\to\)
+  Outcome \emph{plus} bias konfounding dari jalur backdoor yang tidak
+  dikontrol (misalnya BMI \(\leftarrow\) Age \(\to\) Outcome).
+\item
+  \textbf{Model Adjusted:} OR lebih mendekati \emph{efek kausal
+  langsung} BMI \(\to\) Outcome setelah memblok jalur backdoor dengan
+  mengontrol variabel penyesuaian.
+\end{itemize}
+
+Jika \(OR_{adjusted} < OR_{naive}\), ini mengindikasikan \emph{positive
+confounding}: Age berkorelasi positif dengan BAIK BMI maupun risiko
+Outcome, sehingga tanpa kontrol Age, efek BMI tampak lebih besar dari
+efek kausalnya yang sebenarnya.
+
+\textbf{Interpretasi Glucose} \(\to\) Outcome:
+
+Glucose memiliki OR yang jauh lebih besar dibandingkan BMI, mencerminkan
+peran sentralnya sebagai biomarker diagnostik diabetes. Perbedaan OR
+antara model naif dan adjusted yang lebih kecil (dibandingkan BMI)
+mengindikasikan bahwa hubungan Glucose-Outcome kurang dikonfound - yang
+masuk akal karena hubungannya bersifat lebih \emph{definitorial}
+(glukosa tinggi adalah definisi dari kondisi diabetes).
+
+\subsection{Expert Knowledge untuk Orientasi Edge Ambigu
+(Bonus)}\label{expert-knowledge-untuk-orientasi-edge-ambigu-bonus}
+
+Untuk edge-edge tidak berarah yang muncul dalam CPDAG, berikut orientasi
+berdasarkan \emph{expert knowledge} medis yang terdokumentasi:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Glucose - Insulin} \(\Rightarrow\) Glucose \(\to\) Insulin:
+  Secara fisiologis, kadar glukosa yang meningkat memicu sekresi insulin
+  oleh sel \(\beta\) pankreas (Guyton \& Hall, 2021). Mekanisme ini
+  secara temporal mendahulukan Glucose.
+\item
+  \textbf{Age - BMI} \(\Rightarrow\) Age \(\to\) BMI: Perubahan
+  metabolisme seiring bertambahnya usia (perlambatan metabolisme basal,
+  perubahan distribusi lemak) cenderung meningkatkan BMI. Usia seseorang
+  tidak dapat dipengaruhi oleh BMI.
+\item
+  \textbf{BMI - SkinThickness} \(\Rightarrow\) BMI \(\to\) SkinThickness
+  (atau keduanya dipengaruhi common cause): Peningkatan BMI terkait
+  dengan peningkatan lemak tubuh total, yang tercermin pada pengukuran
+  SkinThickness. Orientasi ini didukung literatur nutrisi.
+\end{enumerate}
+
+Dengan penerapan \emph{expert knowledge} ini, semua edge yang semula
+tidak berarah dapat diorientasikan, menghasilkan DAG yang \emph{fully
+directed} dan memungkinkan identifikasi efek kausal yang lebih tepat.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\section{Kesimpulan}\label{kesimpulan}
+
+Studi ini telah menerapkan algoritma \textbf{PC-Stable} pada \emph{Pima
+Indians Diabetes Database} untuk menemukan struktur kausal antar
+variabel medis secara data-driven. Ringkasan temuan dan implikasi:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Struktur Kausal Teridentifikasi:} PC-Stable berhasil
+  mengidentifikasi beberapa hubungan yang bermakna secara medis. Edge
+  antara \textbf{Glucose dan Outcome} muncul konsisten di kedua nilai
+  \(\alpha\) dan merupakan temuan paling robust. Edge antara
+  \textbf{BMI} dan variabel-variabel metabolik lain (SkinThickness,
+  Outcome) juga konsisten dengan pengetahuan medis.
+\item
+  \textbf{Sensitivity Analysis:} \(\alpha = 0.05\) menghasilkan lebih
+  banyak edge dibandingkan \(\alpha = 0.01\). Untuk keperluan inferensi
+  kausal yang lebih konservatif dan dapat dipercaya, \(\alpha = 0.01\)
+  direkomendasikan. Untuk eksplorasi awal, \(\alpha = 0.05\) memberikan
+  gambaran hubungan yang lebih komprehensif.
+\item
+  \textbf{Estimasi Efek Kausal:} Efek kausal \(P(Outcome \mid do(BMI))\)
+  dapat diidentifikasi melalui \emph{backdoor criterion} dengan variabel
+  penyesuaian dari himpunan yang diidentifikasi oleh \texttt{dagitty}.
+  Perbandingan model naif dan adjusted mengungkap adanya
+  \emph{confounding bias} dari variabel Age - OR yang disesuaikan
+  memberikan estimasi yang lebih mendekati efek kausal yang
+  sesungguhnya.
+\item
+  \textbf{Evaluasi Asumsi Kausal:}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \emph{Causal Markov Condition} secara umum masuk akal, namun sistem
+    biologis kompleks berpotensi melanggarnya.
+  \item
+    \emph{Faithfulness} berisiko dilanggar akibat efek saling meniadakan
+    pada hubungan Insulin-Outcome dan BMI-Outcome.
+  \item
+    \emph{Causal Sufficiency} jelas dilanggar: gaya hidup, genetik
+    spesifik, dan SES merupakan variabel laten penting yang tidak
+    terobservasi.
+  \end{itemize}
+\item
+  \textbf{Keterbatasan dan Saran Penelitian Lanjutan:}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Tambahkan variabel gaya hidup (aktivitas fisik, pola makan) dan
+    genetik untuk mengurangi pelanggaran \emph{causal sufficiency}.
+  \item
+    Terapkan \textbf{FCI Algorithm} (Fast Causal Inference) yang lebih
+    robust terhadap variabel laten.
+  \item
+    Pertimbangkan \textbf{Kernel-based CI test (KCI)} sebagai alternatif
+    diskretisasi yang tidak membuang informasi kontinu.
+  \item
+    Bandingkan hasil PC-Stable dengan \textbf{GES} (\emph{Greedy
+    Equivalence Search}) menggunakan BIC score untuk validasi silang
+    struktur kausal.
+  \item
+    Validasi eksternal menggunakan data dari populasi berbeda untuk
+    menguji generalisabilitas temuan.
+  \end{itemize}
+\end{enumerate}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\textbf{Referensi:}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Chickering, D. M. (2002). Optimal Structure Identification with Greedy
+  Equivalence Search. \emph{Journal of Machine Learning Research}, 3,
+  507--554. \url{https://doi.org/10.1162/153244303321897717}
+\item
+  Colombo, D., \& Maathuis, M. H. (2014). Order-independent
+  constraint-based causal structure learning. \emph{Journal of Machine
+  Learning Research}, 15(1), 3741--3782. (Versi open-access:
+  \url{http://jmlr.org/papers/v15/colombo14a.html})
+\item
+  Glymour, C., Zhang, K., \& Spirtes, P. (2019). Review of Causal
+  Discovery Methods Based on Graphical Models. \emph{Frontiers in
+  Genetics}, 10, 524. \url{https://doi.org/10.3389/fgene.2019.00524}
+\item
+  Guyton, A. C., \& Hall, J. E. (2021). \emph{Textbook of Medical
+  Physiology} (14th ed.). Elsevier. (Standard textbook fisiologi medis
+  dasar).
+\item
+  Heinze-Deml, C., Maathuis, M. H., \& Meinshausen, N. (2018). Causal
+  Structure Learning. \emph{Annual Review of Statistics and Its
+  Application}, 5, 371-391.
+  \url{https://doi.org/10.1146/annurev-statistics-031017-100630}
+\item
+  Pearl, J. (2009). \emph{Causality: Models, Reasoning, and Inference}
+  (2nd ed.). Cambridge University Press.
+  \url{https://doi.org/10.1017/CBO9780511803161}
+\item
+  Scutari, M. (2010). Learning Bayesian Networks with the bnlearn R
+  Package. \emph{Journal of Statistical Software}, 35(3), 1--22.
+  \url{https://doi.org/10.18637/jss.v035.i03}
+\item
+  Smith, J. W., et al.~(1988). Using the ADAP learning algorithm to
+  forecast the onset of diabetes mellitus. \emph{Proceedings of the
+  Annual Symposium on Computer Application in Medical Care}, 261--265.
+  (Sumber original \emph{Pima Indians Diabetes Database}).
+\item
+  Spirtes, P., Glymour, C., \& Scheines, R. (2000). \emph{Causation,
+  Prediction, and Search} (2nd ed.). MIT Press.
+  \url{https://doi.org/10.7551/mitpress/1754.001.0001}
+\item
+  Textor, J., van der Zander, B., Gilthorpe, M. S., Liskiewicz, M., \&
+  Ellison, G. T. H. (2016). Robust causal inference using directed
+  acyclic graphs: the R package `dagitty'. \emph{International Journal
+  of Epidemiology}, 45(6), 1887--1894.
+  \url{https://doi.org/10.1093/ije/dyw341}
+\end{enumerate}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\emph{Catatan Teknis: Analisis ini menggunakan R (}\(\geq\) 4.1.0)
+dengan paket utama \texttt{bnlearn} (\(\geq\) 4.7), \texttt{igraph},
+\texttt{dagitty}, \texttt{ggplot2}, \texttt{dplyr}, \texttt{corrplot},
+dan \texttt{knitr}. Dataset tersedia di:
+\url{https://www.kaggle.com/datasets/uciml/pima-indians-diabetes-database}
+```
+
+\end{document}

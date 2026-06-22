@@ -1,0 +1,800 @@
+---
+title: "Causal Discovery pada Dataset Pima Indians Diabetes: Implementasi Algoritma
+  PC-GES"
+author: "Muhammad Dhiauddin - 25917024"
+date: "`r format(Sys.Date(), '%d %B %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    number_sections: true
+    fig_caption: true
+    df_print: paged
+    theme: default
+    highlight: tango
+  pdf_document:
+    toc: true
+    toc_depth: '3'
+geometry: margin=2.5cm
+fontsize: 11pt
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo       = TRUE,
+  warning    = FALSE,
+  message    = FALSE,
+  fig.align  = "center",
+  fig.width  = 7,
+  fig.height = 5,
+  out.width  = "85%",
+  fig.path   = "output/image/"
+)
+options(scipen = 999, digits = 4)
+
+# Create directories if they don't exist
+dir.create("output/image/", showWarnings = FALSE, recursive = TRUE)
+dir.create("output/Rhistory/", showWarnings = FALSE, recursive = TRUE)
+try(savehistory("output/Rhistory/.Rhistory"), silent = TRUE)
+```
+
+```{r install-packages, eval=FALSE}
+# ── Jalankan blok ini SATU KALI untuk menginstal semua dependensi ──────────────
+install.packages(c("bnlearn", "igraph", "dagitty",
+                   "ggplot2", "dplyr", "corrplot", "knitr"))
+
+# Rgraphviz (opsional, alternatif visualisasi via Bioconductor)
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+BiocManager::install(c("Rgraphviz", "graph"))
+```
+
+```{r libraries, results='hide'}
+library(bnlearn)
+library(igraph)
+library(dagitty)
+library(ggplot2)
+library(dplyr)
+library(corrplot)
+library(knitr)
+set.seed(42)
+```
+
+------------------------------------------------------------------------
+
+**Identitas Mahasiswa:**
+
+- **Nama:** Muhammad Dhiauddin
+- **NIM:** 25917024
+- **Konsentrasi:** Sains Data - Profesional
+- **Github:** <https://github.com/Mudhya19/Project-Causal-Discovery-PC-Algorithm-vs-GES.git>
+- **Kaggle:** <https://www.kaggle.com/datasets/uciml/pima-indians-diabetes-database>
+
+------------------------------------------------------------------------
+
+# Pendahuluan
+
+Diabetes melitus tipe 2 merupakan salah satu penyakit metabolik kronis dengan prevalensi tertinggi di dunia. World Health Organization (WHO) mencatat lebih dari 422 juta orang menderita diabetes, dengan sebagian besar beban penyakit berada di negara berkembang. Kemampuan untuk memahami **faktor kausal** - bukan sekadar faktor yang berkorelasi - sangat penting agar intervensi kesehatan dapat dirancang secara lebih efektif. Sebagai contoh, mengetahui bahwa penurunan BMI secara *kausal* menurunkan risiko diabetes memberikan justifikasi yang lebih kuat untuk program penurunan berat badan dibandingkan sekadar mengetahui bahwa BMI dan diabetes berkorelasi positif.
+
+Pendekatan *causal discovery* memungkinkan kita memperoleh struktur kausal secara data-driven dari data observasional, tanpa memerlukan eksperimen terkontrol (RCT). Salah satu algoritma yang paling banyak digunakan adalah **PC Algorithm** (Spirtes et al., 2000), yang bekerja dengan menjalankan serangkaian uji independensi kondisional (CI test) untuk membangun *Completed Partially Directed Acyclic Graph* (CPDAG) - representasi kelas ekivalensi Markov dari semua DAG yang kompatibel dengan data.
+
+**Pertanyaan kausal utama** yang dirumuskan dalam studi ini adalah:
+
+> *"Apakah Indeks Massa Tubuh (BMI) dan kadar glukosa darah secara kausal mempengaruhi risiko diabetes (Outcome), atau hubungan tersebut dijembatani atau dikonfound oleh variabel lain seperti usia (Age) dan riwayat kehamilan (Pregnancies)?"*
+
+Dataset yang digunakan adalah **Pima Indians Diabetes Database** yang bersumber dari National Institute of Diabetes and Digestive and Kidney Diseases (NIDDK), tersedia secara publik di Kaggle (<https://www.kaggle.com/datasets/uciml/pima-indians-diabetes-database>). Dataset ini mencatat pengukuran medis dari 768 wanita keturunan suku Pima Indian berusia minimal 21 tahun.
+
+------------------------------------------------------------------------
+
+# Metode
+
+## Deskripsi Variabel
+
+Dataset terdiri atas 9 variabel dengan tipe data yang dijelaskan pada Tabel 1.
+
+```{r var-table, echo=FALSE}
+var_df <- data.frame(
+  No         = 1:9,
+  Variabel   = c("Pregnancies", "Glucose", "BloodPressure", "SkinThickness",
+                  "Insulin", "BMI", "DiabetesPedigreeFunction", "Age", "Outcome"),
+  Tipe       = c("Kontinu", "Kontinu", "Kontinu", "Kontinu",
+                  "Kontinu", "Kontinu", "Kontinu", "Kontinu", "Biner Diskrit"),
+  Deskripsi  = c(
+    "Jumlah kehamilan",
+    "Glukosa plasma 2 jam pasca tes toleransi oral (mg/dL)",
+    "Tekanan darah diastolik (mm Hg)",
+    "Ketebalan lipatan kulit trisep (mm)",
+    "Kadar insulin serum 2 jam (µU/mL)",
+    "Indeks Massa Tubuh (kg/m²)",
+    "Skor riwayat diabetes keluarga",
+    "Usia (tahun)",
+    "Diagnosis diabetes (1 = Positif, 0 = Negatif)"
+  )
+)
+kable(var_df, caption = "Deskripsi Variabel Dataset Pima Indians Diabetes",
+      col.names = c("No", "Variabel", "Tipe", "Deskripsi"))
+```
+
+## Eksplorasi dan Persiapan Data
+
+### Pembacaan Data dan Statistik Deskriptif Awal
+
+```{r load-data}
+# Pastikan file diabetes.csv berada di direktori yang tepat
+diabetes_raw <- read.csv("dataset/diabetes.csv", stringsAsFactors = FALSE)
+
+# Konversi semua kolom integer menjadi numeric untuk menghindari error di bnlearn
+diabetes_raw[] <- lapply(diabetes_raw, function(x) if(is.integer(x)) as.numeric(x) else x)
+
+cat("Dimensi dataset:", nrow(diabetes_raw), "baris x",
+    ncol(diabetes_raw), "kolom\n")
+
+# Menampilkan tipe data dalam format tabel yang rapi
+tipe_data_df <- data.frame(
+  Variabel = names(diabetes_raw),
+  Tipe_Data = sapply(diabetes_raw, class),
+  row.names = NULL
+)
+knitr::kable(tipe_data_df, caption = "Tipe Data Setiap Kolom", row.names = FALSE)
+```
+
+```{r desc-stats}
+# Transpose tabel summary agar variabel menjadi baris, bukan kolom (menghindari kepanjangan ke kanan)
+desc_stats <- t(round(do.call(cbind, lapply(diabetes_raw, summary)), 2))
+knitr::kable(desc_stats, caption = "Statistik Deskriptif Awal (Sebelum Preprocessing)", row.names = TRUE)
+```
+
+```{r dist-plot, fig.cap="Distribusi Seluruh Variabel Sebelum Preprocessing"}
+par(mfrow = c(3, 3), mar = c(3, 3, 2, 1))
+num_cols <- names(diabetes_raw)
+for (col in num_cols) {
+  if (col == "Outcome") {
+    barplot(table(diabetes_raw[[col]]),
+            main = col, col = c("#AED6F1", "#E74C3C"),
+            names.arg = c("Negatif (0)", "Positif (1)"), cex.main = 0.9)
+  } else {
+    hist(diabetes_raw[[col]], main = col, col = "#AED6F1",
+         border = "white", xlab = "", cex.main = 0.9)
+  }
+}
+par(mfrow = c(1, 1))
+```
+
+### Penanganan Missing Values
+
+Lima variabel mengandung nilai `0` yang secara fisiologis tidak mungkin terjadi: **Glucose** (glukosa 0 tidak mungkin pada individu hidup), **BloodPressure** (tekanan darah diastolik 0 berarti kematian klinis), **SkinThickness** (ketebalan kulit trisep 0 tidak mungkin), **Insulin** (kadar insulin 0 sangat tidak realistis kecuali dalam kondisi patologis ekstrem), dan **BMI** (BMI 0 tidak mungkin pada manusia). Nilai-nilai ini merupakan *missing values* yang dikodekan sebagai `0`, kemungkinan akibat keterbatasan sistem pencatatan medis pada era pengumpulan data.
+
+**Justifikasi Strategi Imputasi - Median Imputation:** Dipilih *median imputation* karena (1) median lebih robust terhadap distribusi skewed dan outlier dibandingkan mean; (2) variabel medis seperti Insulin dan SkinThickness memiliki distribusi yang right-skewed sehingga mean akan overestimate nilai sentral; (3) sederhana, dapat direproduksi, dan tidak menambah variansi buatan. Sebagai alternatif, *Multiple Imputation by Chained Equations* (MICE) dapat dipertimbangkan untuk memperoleh estimasi yang lebih tidak bias, namun untuk keperluan algoritma causal discovery dengan fokus pada struktur kausal, median imputation sudah memadai dan umum digunakan dalam literatur (Spirtes et al., 2000).
+
+```{r missing-values}
+zero_cols <- c("Glucose", "BloodPressure", "SkinThickness", "Insulin", "BMI")
+
+# Salin dataset dan ganti 0 dengan NA
+diabetes_na <- diabetes_raw
+for (col in zero_cols) {
+  diabetes_na[[col]][diabetes_na[[col]] == 0] <- NA
+}
+
+# Tampilkan jumlah missing values
+mv_df <- data.frame(
+  Variabel   = names(diabetes_na),
+  Jumlah_NA  = colSums(is.na(diabetes_na)),
+  Persen_NA  = round(colSums(is.na(diabetes_na)) / nrow(diabetes_na) * 100, 1)
+)
+kable(mv_df, caption = "Jumlah dan Persentase Missing Values per Variabel",
+      col.names = c("Variabel", "Jumlah NA", "Persen (%)"),
+      row.names = FALSE)
+```
+
+```{r median-imputation}
+# Lakukan Median Imputation
+diabetes_imp <- diabetes_na
+medians_used <- numeric(length(zero_cols))
+names(medians_used) <- zero_cols
+
+for (col in zero_cols) {
+  med_val <- median(diabetes_imp[[col]], na.rm = TRUE)
+  medians_used[col] <- med_val
+  diabetes_imp[[col]][is.na(diabetes_imp[[col]])] <- med_val
+}
+
+cat("Nilai Median yang Digunakan untuk Imputasi:\n")
+medians_df <- data.frame(Variabel = names(medians_used), Median = medians_used, row.names = NULL)
+knitr::kable(medians_df, caption = "Nilai Median yang Digunakan untuk Imputasi")
+cat("\nVerifikasi - Total NA setelah imputasi:",
+    sum(is.na(diabetes_imp)), "\n")
+```
+
+### Penanganan Mixed Data: Diskretisasi
+
+**Justifikasi Pemilihan CI Test - G-Squared (Mutual Information) Test:** Dataset ini merupakan *mixed-type data* (8 variabel kontinu + 1 variabel biner diskrit). Terdapat tiga strategi penanganan:
+
+1.  **Diskretisasi** semua variabel kontinu -\> gunakan *G-squared test*
+2.  **Kernel-based CI test (KCI)** - bekerja langsung pada data mixed, namun secara komputasional sangat mahal untuk 768 observasi
+3.  **Fisher's Z-test** - hanya tepat untuk data kontinu berdistribusi normal (Gaussian)
+
+Strategi yang dipilih adalah **diskretisasi** menggunakan fungsi `discretize()` dari paket `bnlearn` dengan metode *quantile* (3 bin). Metode quantile dipilih karena: (a) memastikan distribusi observasi yang relatif seimbang di setiap bin, mengurangi risiko *sparse cells* yang melemahkan uji statistik; (b) tidak mengasumsikan distribusi tertentu sehingga cocok untuk variabel medis yang umumnya skewed.
+
+**Nama CI Test:** *G-Squared Test* (ekivalen dengan *Mutual Information Test*), yaitu uji statistik yang mengikuti distribusi $\chi^2$ dan mengukur apakah dua variabel diskrit saling bebas diberikan sekumpulan variabel kondisional. Statistik ujinya adalah: $$G^2 = 2 \sum_{i,j,k} n_{ijk} \ln\!\left(\frac{n_{ijk} \cdot n_{\cdot\cdot k}}{n_{i\cdot k} \cdot n_{\cdot jk}}\right)$$ Di bawah hipotesis nol independensi kondisional, $G^2$ mengikuti distribusi $\chi^2$ dengan derajat bebas $(I-1)(J-1)|K|$ di mana $|K|$ adalah jumlah kombinasi nilai variabel kondisional.
+
+```{r discretize}
+# Salin data imputed untuk proses diskretisasi
+diabetes_disc_prep <- diabetes_imp
+
+# Konversi Outcome ke faktor terlebih dahulu (agar tidak ikut didiskretisasi)
+diabetes_disc_prep$Outcome <- factor(
+  diabetes_disc_prep$Outcome,
+  levels = c(0, 1),
+  labels = c("Negatif", "Positif")
+)
+
+# Diskretisasi semua variabel numerik menjadi 3 bin (kuantil)
+# Menggunakan metode 'interval' untuk menghindari error zero-length intervals
+# akibat banyaknya data yang bernilai persis sama hasil imputasi median.
+disc_data <- bnlearn::discretize(diabetes_disc_prep,
+                                  method = "interval",
+                                  breaks  = 3)
+
+# Tampilkan tipe data setelah diskretisasi dalam format tabel
+tipe_disc_df <- data.frame(
+  Variabel = names(disc_data),
+  Tipe_Data = sapply(disc_data, class),
+  row.names = NULL
+)
+knitr::kable(tipe_disc_df, caption = "Tipe Data Setelah Diskretisasi")
+```
+
+```{r discretize-levels}
+# Tampilkan level dalam bentuk tabel agar rapi (tidak berantakan di layar)
+levels_df <- data.frame(
+  Variabel = names(disc_data),
+  Level_Kategori = sapply(names(disc_data), function(col) paste(levels(disc_data[[col]]), collapse = " | ")),
+  row.names = NULL
+)
+knitr::kable(levels_df, caption = "Level Variabel Setelah Diskretisasi")
+```
+
+## Algoritma PC-Stable
+
+Algoritma PC-Stable (Colombo & Maathuis, 2014) adalah varian *order-independent* dari PC Algorithm yang bekerja dalam dua fase utama:
+
+1.  **Fase Skeleton:** Dimulai dari graf lengkap (*complete graph*), setiap pasang variabel $(X, Y)$ diuji apakah saling bebas secara kondisional diberikan berbagai himpunan $S$ (dimulai dari $|S|=0, 1, 2, \ldots$). Jika ditemukan $S$ (*separating set*) sehingga $X \perp\!\!\!\perp Y \mid S$, maka edge $X-Y$ dihapus.
+
+2.  **Fase Orientasi:** Edge yang tersisa diorientasikan menggunakan *Meek Rules*: orientasi dimulai dari deteksi *v-structures* (unshielded colliders $X \to Z \leftarrow Y$ di mana $X-Y$ tidak terhubung langsung), dilanjutkan dengan penerapan empat orientation rules untuk menghindari siklus dan v-structure baru.
+
+**Parameter yang digunakan:** - CI Test: `"mi"` (G-Squared / Mutual Information) - sesuai untuk data diskrit - Nilai $\alpha$: 0.01 dan 0.05 (*sensitivity analysis*) - Paket: `bnlearn` (versi $\geq$ 4.7) - Platform: R $\geq$ 4.1.0
+
+------------------------------------------------------------------------
+
+# Hasil
+
+## Statistik Deskriptif Pasca Preprocessing
+
+```{r post-prep-stats}
+# Transpose tabel agar rapi dan muat di halaman
+post_stats <- t(round(sapply(diabetes_imp[, -9], function(x) {
+  c(Min    = min(x),
+    Q1     = quantile(x, 0.25),
+    Median = median(x),
+    Mean   = mean(x),
+    Q3     = quantile(x, 0.75),
+    Max    = max(x),
+    SD     = sd(x))
+}), 2))
+knitr::kable(post_stats, caption = "Statistik Deskriptif Setelah Imputasi (Variabel Kontinu)", row.names = TRUE)
+```
+
+```{r outcome-bar, fig.cap="Distribusi Variabel Outcome (Diagnosis Diabetes)"}
+outcome_counts <- table(diabetes_imp$Outcome)
+outcome_pct    <- round(prop.table(outcome_counts) * 100, 1)
+barplot(outcome_counts,
+        col     = c("#AED6F1", "#E74C3C"),
+        names.arg = c(paste0("Negatif (0)\n", outcome_pct[1], "%"),
+                      paste0("Positif (1)\n",  outcome_pct[2], "%")),
+        main    = "Distribusi Outcome (Diagnosis Diabetes)",
+        ylab    = "Frekuensi",
+        border  = "white")
+legend("topright",
+       legend = c(paste0("Negatif: n = ", outcome_counts[1]),
+                  paste0("Positif: n = ", outcome_counts[2])),
+       fill   = c("#AED6F1", "#E74C3C"), bty = "n")
+```
+
+```{r corrplot, fig.cap="Matriks Korelasi Pearson Antar Variabel Numerik (Pasca Imputasi)"}
+cor_mat <- cor(diabetes_imp[, -9])
+corrplot(cor_mat,
+         method      = "color",
+         type        = "upper",
+         addCoef.col = "black",
+         number.cex  = 0.65,
+         tl.cex      = 0.75,
+         col         = colorRampPalette(c("#D73027", "#FFFFFF", "#1A9850"))(200),
+         title       = "Matriks Korelasi (Variabel Kontinu)",
+         mar         = c(0, 0, 2, 0))
+```
+
+## Causal Discovery: Algoritma PC-Stable
+
+### Fungsi Utilitas Visualisasi CPDAG
+
+```{r plot-function}
+# Fungsi plot CPDAG menggunakan igraph
+# Edge berarah  -> ditampilkan dengan warna gelap dan anak panah
+# Edge tidak berarah - ditampilkan merah putus-putus tanpa anak panah
+plot_cpdag <- function(net, title = "CPDAG") {
+
+  node_names <- nodes(net)
+  n          <- length(node_names)
+  dir_a      <- directed.arcs(net)
+  undir_a    <- undirected.arcs(net)
+
+  # Akumulasi daftar edge
+  e_from <- integer(0); e_to <- integer(0)
+  e_col  <- character(0); e_lty <- integer(0); e_arr <- integer(0)
+
+  # Edge berarah
+  if (nrow(dir_a) > 0) {
+    e_from <- c(e_from, match(dir_a[, "from"], node_names))
+    e_to   <- c(e_to,   match(dir_a[, "to"],   node_names))
+    e_col  <- c(e_col,  rep("#1A5276", nrow(dir_a)))
+    e_lty  <- c(e_lty,  rep(1L,        nrow(dir_a)))
+    e_arr  <- c(e_arr,  rep(2L,        nrow(dir_a)))   # anak panah ke depan
+  }
+
+  # Edge tidak berarah - ambil pasangan unik saja
+  if (nrow(undir_a) > 0) {
+    pairs_m <- unique(t(apply(undir_a, 1L, sort)))
+    if (!is.matrix(pairs_m)) pairs_m <- matrix(pairs_m, nrow = 1L)
+    e_from <- c(e_from, match(pairs_m[, 1L], node_names))
+    e_to   <- c(e_to,   match(pairs_m[, 2L], node_names))
+    e_col  <- c(e_col,  rep("#C0392B", nrow(pairs_m)))
+    e_lty  <- c(e_lty,  rep(2L,        nrow(pairs_m)))
+    e_arr  <- c(e_arr,  rep(0L,        nrow(pairs_m)))   # tanpa anak panah
+  }
+
+  # Buat igraph
+  g <- make_empty_graph(n = n, directed = TRUE)
+  V(g)$name <- node_names
+
+  if (length(e_from) > 0) {
+    g               <- add_edges(g, as.vector(rbind(e_from, e_to)))
+    E(g)$color      <- e_col
+    E(g)$lty        <- e_lty
+    E(g)$arrow.mode <- e_arr
+  }
+
+  set.seed(123)
+  lo <- layout_with_fr(g)
+
+  plot(g,
+       layout             = lo,
+       vertex.color       = "#AED6F1",
+       vertex.frame.color = "#1A5276",
+       vertex.shape       = "circle",
+       vertex.size        = 30,
+       vertex.label       = V(g)$name,
+       vertex.label.cex   = 0.72,
+       vertex.label.color = "black",
+       vertex.label.font  = 2L,
+       edge.arrow.size    = 0.55,
+       edge.width         = 1.8,
+       main               = title)
+
+  legend("bottomright",
+         legend = c("Edge Berarah (->)", "Edge Tidak Berarah (-)"),
+         col    = c("#1A5276", "#C0392B"),
+         lty    = c(1L, 2L),
+         lwd    = 2,
+         cex    = 0.75,
+         bg     = "white",
+         box.lty = 0)
+}
+
+# Fungsi ringkasan edge
+summarize_edges <- function(net, label = "") {
+  dir_a   <- directed.arcs(net)
+  undir_a <- undirected.arcs(net)
+  n_dir   <- nrow(dir_a)
+  n_undir <- if (nrow(undir_a) > 0) nrow(undir_a) / 2L else 0L
+  cat(sprintf("\n=== %s ===\n", label))
+  cat(sprintf("Edge berarah    : %d\n", n_dir))
+  cat(sprintf("Edge tdk berarah: %d\n", n_undir))
+  cat(sprintf("Total edge      : %d\n\n", n_dir + n_undir))
+
+  if (n_dir > 0) {
+    cat("Edge berarah:\n"); print(dir_a)
+  }
+  if (n_undir > 0) {
+    pairs_m <- unique(t(apply(undir_a, 1L, sort)))
+    if (!is.matrix(pairs_m)) pairs_m <- matrix(pairs_m, nrow = 1L)
+    cat("\nEdge tidak berarah (pasangan unik):\n"); print(pairs_m)
+  }
+  invisible(list(n_dir = n_dir, n_undir = n_undir))
+}
+```
+
+### PC-Stable dengan $\alpha = 0.01$
+
+```{r pc-alpha01, fig.cap="CPDAG Hasil PC-Stable (alpha = 0.01)"}
+set.seed(42)
+pc_01  <- pc.stable(disc_data, alpha = 0.01, test = "mi", undirected = FALSE)
+info01 <- summarize_edges(pc_01, "PC-Stable (alpha = 0.01)")
+plot_cpdag(pc_01, title = expression(paste("CPDAG: PC-Stable  (", alpha, " = 0.01)")))
+```
+
+### PC-Stable dengan $\alpha = 0.05$
+
+```{r pc-alpha05, fig.cap="CPDAG Hasil PC-Stable (alpha = 0.05)"}
+set.seed(42)
+pc_05  <- pc.stable(disc_data, alpha = 0.05, test = "mi", undirected = FALSE)
+info05 <- summarize_edges(pc_05, "PC-Stable (alpha = 0.05)")
+plot_cpdag(pc_05, title = expression(paste("CPDAG: PC-Stable  (", alpha, " = 0.05)")))
+```
+
+### Score-Based Algorithm: Hill-Climbing (Alternatif GES)
+
+Algoritma *Score-Based* bekerja dengan mengeksplorasi ruang pencarian DAG secara rakus (*greedy search*) untuk menemukan graf yang memaksimalkan fungsi skor (*goodness-of-fit*). Dalam paket `bnlearn`, algoritma utama untuk pendekatan ini adalah **Hill-Climbing (`hc`)**, yang filosofinya sangat mirip dengan *Greedy Equivalence Search* (GES).
+
+**Parameter yang digunakan:** - **Skor:** `"bic"` (Bayesian Information Criterion). Pemilihan BIC dijustifikasi karena memberikan penalti pada kompleksitas graf (mencegah *overfitting* yang sering terjadi jika hanya menggunakan *log-likelihood*). - Graf hasil *Hill-Climbing* berupa DAG kemudian dikonversi menjadi *CPDAG* agar setara dan bisa dibandingkan *apple-to-apple* dengan *output* PC Algorithm.
+
+```{r hc-bic, fig.cap="CPDAG Hasil Hill-Climbing (Skor BIC)"}
+set.seed(42)
+# Mencari DAG terbaik menggunakan Hill-Climbing dengan skor BIC
+hc_dag <- hc(disc_data, score = "bic")
+
+# Mengonversi DAG menjadi CPDAG
+hc_cpdag <- cpdag(hc_dag)
+info_hc <- summarize_edges(hc_cpdag, "Hill-Climbing (BIC)")
+plot_cpdag(hc_cpdag, title = "CPDAG: Hill-Climbing (Score = BIC)")
+```
+
+### Perbandingan Algoritma: PC-Stable vs Hill-Climbing
+
+```{r sensitivity-table}
+# Menghitung skor BIC untuk pembandingan (Lebih tinggi/mendekati 0 = Lebih baik)
+# score() membutuhkan DAG. Kita buat fungsi tryCatch agar tidak error jika cextend gagal
+safe_score <- function(cpdag_net, data) {
+  res <- tryCatch(score(cextend(cpdag_net), data, type = "bic"), error = function(e) NA)
+  return(res)
+}
+
+score_pc01 <- safe_score(pc_01, disc_data)
+score_pc05 <- safe_score(pc_05, disc_data)
+score_hc   <- score(hc_dag, disc_data, type = "bic")
+
+sens_df <- data.frame(
+  Kriteria = c(
+    "Metode Pendekatan",
+    "Parameter / Skor",
+    "Total Edge",
+    "Edge Berarah (->)",
+    "Edge Tidak Berarah (-)",
+    "Skor BIC Graf"
+  ),
+  Alpha_001 = c("Constraint-Based", "α = 0.01",
+                info01$n_dir + info01$n_undir,
+                info01$n_dir, info01$n_undir, round(score_pc01, 2)),
+  Alpha_005 = c("Constraint-Based", "α = 0.05",
+                info05$n_dir + info05$n_undir,
+                info05$n_dir, info05$n_undir, round(score_pc05, 2)),
+  HC_BIC = c("Score-Based", "BIC",
+             info_hc$n_dir + info_hc$n_undir,
+             info_hc$n_dir, info_hc$n_undir, round(score_hc, 2))
+)
+kable(sens_df,
+      caption = "Perbandingan Analisis: PC-Stable (Sensitivity) vs Hill-Climbing",
+      col.names = c("Kriteria", "PC-Stable (α=0.01)", "PC-Stable (α=0.05)", "Hill-Climbing"),
+      row.names = FALSE)
+```
+
+Tabel perbandingan di atas menjawab instruksi eksperimen dari beberapa sudut pandang: 1. **Sensitivity Analysis PC:** Terlihat jelas bahwa pelonggaran ambang batas independensi statistik (dari $\alpha=0.01$ menjadi $0.05$) membuat graf menjadi lebih *dense* (mempertahankan lebih banyak edge). 2. **Kekuatan Algoritma Score-Based (HC/GES):** Algoritma berbasis skor mengevaluasi keseluruhan struktur (secara global) menggunakan BIC. Hal ini memberikan keunggulan di mana orientasi edge sering kali menjadi lebih asimetris dan tegas dibandingkan PC yang murni bergantung pada keberadaan *v-structures* lokal. Skor BIC yang lebih tinggi (lebih mendekati nol) menunjukkan struktur graf yang secara statistik lebih didukung oleh sebaran data.
+
+## Estimasi Efek Kausal: BMI $\rightarrow$ Outcome
+
+### Identifikasi Formal dengan Backdoor Criterion
+
+Berdasarkan hasil CPDAG dan pengetahuan domain medis, didefinisikan DAG beranotasi pakar (*expert-refined DAG*) untuk identifikasi formal menggunakan paket `dagitty`.
+
+```{r dagitty-dag}
+dag_expert <- dagitty('dag {
+  Pregnancies              [pos="0,2"]
+  Glucose                  [pos="1.5,1"]
+  BloodPressure            [pos="3,2"]
+  SkinThickness            [pos="4,2"]
+  Insulin                  [pos="4,1"]
+  BMI                      [pos="2,2.5"]
+  DiabetesPedigreeFunction [pos="4,3"]
+  Age                      [pos="0,3"]
+  Outcome                  [pos="2,0"]
+
+  Age -> Pregnancies
+  Age -> BMI
+  Age -> Glucose
+  BMI -> Outcome
+  BMI -> SkinThickness
+  Glucose -> Outcome
+  Glucose -> Insulin
+  DiabetesPedigreeFunction -> Outcome
+  BloodPressure -> Outcome
+  Pregnancies -> Outcome
+}')
+
+# Tampilkan ancestor / descendant BMI untuk memeriksa struktur
+cat("Ancestors dari BMI:", paste(ancestors(dag_expert, "BMI"), collapse = ", "), "\n")
+cat("Descendants dari BMI:", paste(descendants(dag_expert, "BMI"), collapse = ", "), "\n\n")
+
+# Identifikasi Backdoor Adjustment Set minimal
+adj_bmi <- adjustmentSets(dag_expert,
+                           exposure = "BMI",
+                           outcome  = "Outcome",
+                           type     = "minimal")
+cat("Minimal Backdoor Adjustment Set untuk P(Outcome | do(BMI)):\n")
+print(adj_bmi)
+
+adj_gluc <- adjustmentSets(dag_expert,
+                            exposure = "Glucose",
+                            outcome  = "Outcome",
+                            type     = "minimal")
+cat("\nMinimal Backdoor Adjustment Set untuk P(Outcome | do(Glucose)):\n")
+print(adj_gluc)
+```
+
+```{r dagitty-identifiable}
+# Cek identifiability menggunakan ada/tidaknya adjustment set
+cat("Efek P(Outcome|do(BMI)) identifiable via backdoor?",
+    length(adj_bmi) > 0, "\n")
+cat("Efek P(Outcome|do(Glucose)) identifiable via backdoor?",
+    length(adj_gluc) > 0, "\n")
+
+# Tentukan adjustment variable dari set minimal pertama
+adj_vars_bmi  <- as.character(unlist(adj_bmi[1]))
+adj_vars_gluc <- as.character(unlist(adj_gluc[1]))
+cat("\nVariabel penyesuaian untuk BMI    :", paste(adj_vars_bmi, collapse = ", "), "\n")
+cat("Variabel penyesuaian untuk Glucose:", paste(adj_vars_gluc, collapse = ", "), "\n")
+```
+
+### Regresi Logistik Naif vs. Backdoor Adjusted
+
+Estimasi efek kausal $P(Outcome = 1 \mid do(BMI))$ menggunakan *backdoor adjustment formula*: $$P(Outcome=1 \mid do(BMI=x)) = \sum_{z \in \mathcal{Z}} P(Outcome=1 \mid BMI=x,\, Z=z)\cdot P(Z=z)$$
+
+Dalam praktik, formula ini ekivalen dengan regresi logistik yang mengontrol variabel *adjustment* $Z$ (yaitu semua variabel dalam *backdoor adjustment set*).
+
+```{r regression-bmi}
+# Data regresi: gunakan data imputed (kontinu), Outcome sebagai 0/1 numerik
+diabetes_reg <- diabetes_imp   # Outcome masih 0/1 numerik
+
+# ── MODEL BMI ──────────────────────────────────────────────────────────────────
+# Model 1: Naif - tanpa adjustment
+m_bmi_naive <- glm(Outcome ~ BMI,
+                    data   = diabetes_reg,
+                    family = binomial(link = "logit"))
+
+# Model 2: Adjusted - backdoor criterion (misal: Age sebagai confounders)
+fml_bmi_adj <- as.formula(
+  paste("Outcome ~ BMI +", paste(adj_vars_bmi, collapse = " + "))
+)
+m_bmi_adj <- glm(fml_bmi_adj,
+                  data   = diabetes_reg,
+                  family = binomial(link = "logit"))
+
+# Model 3: Full adjusted - tambahan kontrol Glucose (mediator/confounders potensial)
+m_bmi_full <- glm(Outcome ~ BMI + Age + Pregnancies + Glucose,
+                   data   = diabetes_reg,
+                   family = binomial(link = "logit"))
+
+cat("── Koefisien Model Naif (BMI) ──\n")
+print(round(summary(m_bmi_naive)$coefficients, 4))
+
+cat("\n── Koefisien Model Adjusted (BMI + Backdoor) ──\n")
+print(round(summary(m_bmi_adj)$coefficients, 4))
+```
+
+```{r or-table}
+# Fungsi bantu hitung OR dan CI (Wald-based)
+ci_or <- function(model, var) {
+  b   <- coef(model)[var]
+  se  <- summary(model)$coefficients[var, "Std. Error"]
+  data.frame(
+    OR      = round(exp(b), 4),
+    CI_low  = round(exp(b - 1.96 * se), 4),
+    CI_high = round(exp(b + 1.96 * se), 4),
+    p_value = round(summary(model)$coefficients[var, "Pr(>|z|)"], 4),
+    AIC     = round(AIC(model), 2)
+  )
+}
+
+or_bmi_naive <- ci_or(m_bmi_naive, "BMI")
+or_bmi_adj   <- ci_or(m_bmi_adj,   "BMI")
+or_bmi_full  <- ci_or(m_bmi_full,  "BMI")
+
+or_df <- rbind(
+  cbind(Model = "Naif (BMI saja)",                        or_bmi_naive),
+  cbind(Model = paste0("Adjusted (BMI + ", paste(adj_vars_bmi, collapse="+"), ")"),
+        or_bmi_adj),
+  cbind(Model = "Full Adj. (BMI + Age + Pregnancies + Glucose)", or_bmi_full)
+)
+
+kable(or_df,
+      caption = "Perbandingan Odds Ratio BMI terhadap Outcome: Naif vs. Adjusted",
+      col.names = c("Model", "OR (BMI)", "95% CI (Bawah)", "95% CI (Atas)",
+                    "p-value", "AIC"),
+      row.names = FALSE)
+```
+
+```{r regression-glucose}
+# ── MODEL GLUCOSE ─────────────────────────────────────────────────────────────
+m_gluc_naive <- glm(Outcome ~ Glucose,
+                     data   = diabetes_reg,
+                     family = binomial(link = "logit"))
+
+fml_gluc_adj <- as.formula(
+  paste("Outcome ~ Glucose +", paste(adj_vars_gluc, collapse = " + "))
+)
+m_gluc_adj <- glm(fml_gluc_adj,
+                   data   = diabetes_reg,
+                   family = binomial(link = "logit"))
+
+or_gluc_naive <- ci_or(m_gluc_naive, "Glucose")
+or_gluc_adj   <- ci_or(m_gluc_adj,   "Glucose")
+
+or_gluc_df <- rbind(
+  cbind(Model = "Naif (Glucose saja)",         or_gluc_naive),
+  cbind(Model = paste0("Adjusted (Glucose + ",
+                        paste(adj_vars_gluc, collapse="+"), ")"), or_gluc_adj)
+)
+kable(or_gluc_df,
+      caption = "Perbandingan Odds Ratio Glucose terhadap Outcome: Naif vs. Adjusted",
+      col.names = c("Model", "OR (Glucose)", "95% CI (Bawah)", "95% CI (Atas)",
+                    "p-value", "AIC"),
+      row.names = FALSE)
+```
+
+------------------------------------------------------------------------
+
+# Interpretasi dan Diskusi
+
+## Analisis Edge Spesifik
+
+### Edge 1: Glucose - Outcome
+
+Edge antara Glucose dan Outcome merupakan temuan yang paling kuat dan konsisten di kedua nilai $\alpha$. Hubungan ini sangat kuat dijustifikasi secara medis: kadar glukosa plasma adalah *biomarker utama* diagnosis diabetes melitus. Menurut American Diabetes Association (ADA, 2023), kadar glukosa plasma $\geq 200$ mg/dL 2 jam pasca *oral glucose tolerance test* (OGTT) merupakan kriteria diagnostik. Dengan demikian, Glucose dan Outcome secara definitorial berkaitan.
+
+**Arah edge:** Orientasi yang paling masuk akal secara kausal adalah **Glucose** $\to$ Outcome (bukan sebaliknya). Kadar glukosa tinggi yang persisten menyebabkan diagnosis diabetes, bukan diagnosis yang menciptakan kadar glukosa tinggi. Jika algoritma menghasilkan edge ini tidak berarah, hal ini disebabkan oleh ketidakhadiran v-structure yang cukup untuk menerapkan orientation rule Meek - bukan karena hubungan kausal tidak ada.
+
+### Edge 2: BMI - SkinThickness (atau BMI - Outcome)
+
+BMI dan SkinThickness keduanya mengukur adipositas (lemak tubuh) dari sudut pandang yang berbeda: BMI menggunakan rasio berat/tinggi badan, sementara SkinThickness mengukur lemak subkutan secara langsung. Korelasi tinggi antara keduanya (lihat matriks korelasi) sangat wajar secara fisiologis. Algoritma mendeteksi dependensi yang kuat dan mempertahankan edge ini.
+
+**Mengapa edge BMI-SkinThickness bisa tidak berarah:** Keduanya mungkin memiliki *common cause* yang tidak terobservasi (gaya hidup, asupan kalori), membentuk struktur $\text{CommonCause} \to \text{BMI}$ dan $\text{CommonCause} \to \text{SkinThickness}$. Dalam konteks observasional tanpa variabel common cause ini, algoritma tidak memiliki informasi v-structure yang cukup untuk menentukan arah, sehingga edge tetap tidak berarah sesuai CPDAG.
+
+### Edge 3: Age - Pregnancies
+
+Edge antara Age dan Pregnancies mencerminkan realitas biologis bahwa wanita yang lebih tua memiliki lebih banyak kesempatan untuk hamil sepanjang hidupnya. Secara temporal, usia mendahului kehamilan, sehingga orientasi kausal **Age** $\to$ Pregnancies masuk akal. Orientasi terbalik (Pregnancies $\to$ Age) tidak mungkin secara kausal karena kehamilan tidak menyebabkan seseorang bertambah tua secara lebih cepat dalam dataset cross-sectional ini.
+
+## Evaluasi Tiga Asumsi Kausal
+
+### Asumsi 1: Causal Markov Condition
+
+**Definisi:** Setiap variabel $X$ dalam DAG secara kondisional independen dari semua *non-descendant*-nya diberikan *parent*-nya.
+
+**Evaluasi untuk dataset Pima Diabetes:**
+
+Asumsi ini *secara umum masuk akal* untuk konteks medis ini, dengan sejumlah catatan:
+
+- **Mendukung asumsi:** Variabel-variabel seperti Glucose, BMI, dan Insulin memiliki mekanisme biologis yang terlokalisasi - misalnya, mengetahui BMI seseorang kemungkinan membuat informasi SkinThickness menjadi kurang relevan untuk memprediksi Outcome secara langsung, sesuai dengan inti Markov Condition.
+- **Meragukan asumsi:** Sistem biologis manusia saling terintegrasi secara kompleks. Kemungkinan ada efek langsung dari Pregnancies ke BloodPressure (hipertensi gestasional), atau dari Age ke hampir semua variabel lain melalui jalur-jalur yang belum termodelkan. Dalam sistem biologis, "blanket kausal" jarang bersifat sempurna.
+
+**Implikasi pelanggaran:** Jika Markov Condition dilanggar, algoritma dapat mempertahankan edge yang seharusnya tidak ada (*false positive edges*), menghasilkan CPDAG yang terlalu *dense* dan sulit diinterpretasikan.
+
+### Asumsi 2: Faithfulness
+
+**Definisi:** Setiap independensi kondisional yang terdeteksi dalam distribusi data benar-benar merupakan refleksi struktur DAG, bukan hasil *cancellation effect* yang tidak disengaja - di mana dua jalur kausal dari $X$ ke $Y$ memiliki efek yang saling meniadakan persis.
+
+**Risiko pelanggaran pada dataset Diabetes:**
+
+- **Insulin dan Outcome:** Insulin memiliki dua efek yang berlawanan - peningkatan insulin awalnya *menurunkan* glukosa (efek protektif jangka pendek terhadap diabetes) namun juga merupakan tanda *resistensi insulin* yang merupakan faktor risiko utama diabetes tipe 2. Kedua efek ini dapat saling meniadakan, menyebabkan asosiasi observasional antara Insulin dan Outcome terlihat lebih lemah dari efek kausalnya yang sesungguhnya.
+- **BMI dan Outcome via dua jalur:** BMI dapat meningkatkan risiko diabetes melalui peningkatan resistensi insulin (jalur positif), namun beberapa penelitian menunjukkan bahwa individu dengan BMI tinggi yang aktif secara fisik memiliki risiko yang lebih rendah (jalur negatif via aktivitas fisik, yang tidak terobservasi). Pembatalan parsial ini dapat memlemahkan deteksi edge BMI-Outcome oleh algoritma.
+
+**Konsekuensi:** Pelanggaran faithfulness menyebabkan *false negative edges* - edge yang secara kausal ada, namun tidak terdeteksi karena pembatalan efek.
+
+### Asumsi 3: Causal Sufficiency
+
+**Definisi:** Semua *common cause* dari variabel-variabel yang terobservasi juga tercakup dalam dataset - tidak ada *confounder* tersembunyi atau variabel laten.
+
+**Variabel Laten yang Tidak Terobservasi dalam Dataset Ini:**
+
+1.  **Gaya Hidup (Diet dan Aktivitas Fisik):** Pola makan tinggi kalori dan rendah aktivitas fisik secara simultan menyebabkan *peningkatan BMI*, *peningkatan glukosa*, dan *risiko diabetes* yang lebih tinggi. Ini adalah *common cause* (confounder) yang tidak terobservasi. Tanpa variabel ini, estimasi efek kausal BMI $\to$ Outcome akan menangkap sebagian efek gaya hidup, sehingga terbias ke atas.
+
+2.  **Faktor Genetik Spesifik:** Meskipun `DiabetesPedigreeFunction` adalah proksi riwayat keluarga, banyak varian genetik (SNPs) yang mempengaruhi sekresi insulin, sensitivitas reseptor glukosa, dan kecenderungan obesitas tidak tercakup.
+
+3.  **Status Sosial-Ekonomi (SES):** Akses ke makanan bergizi, pelayanan kesehatan, dan tingkat stres kronik bervariasi antar individu, mempengaruhi hampir semua variabel dalam dataset secara simultan.
+
+**Dampak Pelanggaran Causal Sufficiency:** Keberadaan confounder tersembunyi (misalnya Gaya Hidup) menciptakan jalur *backdoor* yang tidak dapat diblok melalui prosedur adjustment standar dengan variabel yang terobservasi. Akibatnya, estimasi efek kausal $P(Outcome \mid do(BMI))$ akan *tetap terbias* bahkan setelah adjustment, dan struktur CPDAG yang dihasilkan algoritma PC akan mengandung *spurious edges* yang mencerminkan confounding yang tidak terakomodasi.
+
+## Perbedaan Constraint-based (PC) vs Score-based (HC/GES)
+
+Secara teoritis dan empiris dari hasil eksekusi: - **Constraint-Based (PC Algorithm):** Sangat bergantung pada keandalan uji statistik independensi (seperti *G-Squared*). Pada dataset medis dengan jumlah observasi sedang, sel pada tabel kontingensi sering kosong (*sparse*), sehingga menurunkan *power* dari uji statistik dan menyebabkan beberapa *false positive* atau kegagalan penentuan arah. - **Score-Based (Hill-Climbing / GES):** Mengeksplorasi ruang DAG untuk memaksimalkan kecocokan global (BIC). Secara empiris, ini membuat model HC lebih *robust* dalam memecahkan ambiguitas arah (edge tidak berarah) karena dipandu secara langsung oleh nilai skor fungsi objektif.
+
+## Pemilihan Graf yang Paling Dipercaya
+
+Dari seluruh varian algoritma yang diuji, **rekomendasi akhir** jatuh pada titik seimbang, yakni mempertimbangkan struktur utama yang konsisten (irisan edge) di antara semua graf, dengan keutamaan struktural berpedoman pada **Hill-Climbing (BIC) atau PC-Stable** $\alpha=0.01$, mengingat hal berikut:
+
+1.  **Kontrol False Discovery Rate:** Threshold yang lebih ketat (0.01) memastikan bahwa hanya edge yang didukung oleh bukti statistik yang sangat kuat yang dipertahankan, mengurangi risiko edge spurious akibat kebetulan statistik.
+
+2.  **Prinsip Parsimoni Kausal:** Dalam inferensi kausal, lebih aman memulai dari graf yang lebih sederhana (*conservative*) dan menambah edge berdasarkan pengetahuan domain yang terverifikasi, daripada memulai dari graf yang penuh dan berusaha mengeliminasi edge.
+
+3.  **Keterbatasan CI Test dengan Diskretisasi:** Dengan 768 observasi dan diskretisasi 3 bin, conditioning set berukuran besar ($|S| \geq 3$) dapat menghasilkan tabel kontingensi yang sangat *sparse*. Pada kondisi ini, G-squared test memiliki *power* yang rendah dan dapat menghasilkan *false positive* - sehingga threshold yang lebih ketat (0.01) membantu mengompensasi ketidakreliabelan ini.
+
+Namun perlu dicatat: graf dengan $\alpha = 0.05$ berguna untuk tahap eksplorasi awal, mengidentifikasi hubungan potensial yang layak diselidiki lebih lanjut.
+
+## Interpretasi Efek Kausal
+
+**Temuan Regresi Naif vs. Adjusted:**
+
+Perbandingan Odds Ratio (OR) antara model naif dan adjusted mengungkap keberadaan *confounding bias*. Dalam regresi logistik:
+
+- **Model Naif:** OR mencerminkan *total association* antara BMI dan Outcome - ini mencakup efek kausal langsung BMI $\to$ Outcome *plus* bias konfounding dari jalur backdoor yang tidak dikontrol (misalnya BMI $\leftarrow$ Age $\to$ Outcome).
+- **Model Adjusted:** OR lebih mendekati *efek kausal langsung* BMI $\to$ Outcome setelah memblok jalur backdoor dengan mengontrol variabel penyesuaian.
+
+Jika $OR_{adjusted} < OR_{naive}$, ini mengindikasikan *positive confounding*: Age berkorelasi positif dengan BAIK BMI maupun risiko Outcome, sehingga tanpa kontrol Age, efek BMI tampak lebih besar dari efek kausalnya yang sebenarnya.
+
+**Interpretasi Glucose** $\to$ Outcome:
+
+Glucose memiliki OR yang jauh lebih besar dibandingkan BMI, mencerminkan peran sentralnya sebagai biomarker diagnostik diabetes. Perbedaan OR antara model naif dan adjusted yang lebih kecil (dibandingkan BMI) mengindikasikan bahwa hubungan Glucose-Outcome kurang dikonfound - yang masuk akal karena hubungannya bersifat lebih *definitorial* (glukosa tinggi adalah definisi dari kondisi diabetes).
+
+## Expert Knowledge untuk Orientasi Edge Ambigu (Bonus)
+
+Untuk edge-edge tidak berarah yang muncul dalam CPDAG, berikut orientasi berdasarkan *expert knowledge* medis yang terdokumentasi:
+
+1.  **Glucose - Insulin** $\Rightarrow$ Glucose $\to$ Insulin: Secara fisiologis, kadar glukosa yang meningkat memicu sekresi insulin oleh sel $\beta$ pankreas (Guyton & Hall, 2021). Mekanisme ini secara temporal mendahulukan Glucose.
+
+2.  **Age - BMI** $\Rightarrow$ Age $\to$ BMI: Perubahan metabolisme seiring bertambahnya usia (perlambatan metabolisme basal, perubahan distribusi lemak) cenderung meningkatkan BMI. Usia seseorang tidak dapat dipengaruhi oleh BMI.
+
+3.  **BMI - SkinThickness** $\Rightarrow$ BMI $\to$ SkinThickness (atau keduanya dipengaruhi common cause): Peningkatan BMI terkait dengan peningkatan lemak tubuh total, yang tercermin pada pengukuran SkinThickness. Orientasi ini didukung literatur nutrisi.
+
+Dengan penerapan *expert knowledge* ini, semua edge yang semula tidak berarah dapat diorientasikan, menghasilkan DAG yang *fully directed* dan memungkinkan identifikasi efek kausal yang lebih tepat.
+
+------------------------------------------------------------------------
+
+# Kesimpulan
+
+Studi ini telah menerapkan algoritma **PC-Stable** pada *Pima Indians Diabetes Database* untuk menemukan struktur kausal antar variabel medis secara data-driven. Ringkasan temuan dan implikasi:
+
+1.  **Struktur Kausal Teridentifikasi:** PC-Stable berhasil mengidentifikasi beberapa hubungan yang bermakna secara medis. Edge antara **Glucose dan Outcome** muncul konsisten di kedua nilai $\alpha$ dan merupakan temuan paling robust. Edge antara **BMI** dan variabel-variabel metabolik lain (SkinThickness, Outcome) juga konsisten dengan pengetahuan medis.
+
+2.  **Sensitivity Analysis:** $\alpha = 0.05$ menghasilkan lebih banyak edge dibandingkan $\alpha = 0.01$. Untuk keperluan inferensi kausal yang lebih konservatif dan dapat dipercaya, $\alpha = 0.01$ direkomendasikan. Untuk eksplorasi awal, $\alpha = 0.05$ memberikan gambaran hubungan yang lebih komprehensif.
+
+3.  **Estimasi Efek Kausal:** Efek kausal $P(Outcome \mid do(BMI))$ dapat diidentifikasi melalui *backdoor criterion* dengan variabel penyesuaian dari himpunan yang diidentifikasi oleh `dagitty`. Perbandingan model naif dan adjusted mengungkap adanya *confounding bias* dari variabel Age - OR yang disesuaikan memberikan estimasi yang lebih mendekati efek kausal yang sesungguhnya.
+
+4.  **Evaluasi Asumsi Kausal:**
+
+    - *Causal Markov Condition* secara umum masuk akal, namun sistem biologis kompleks berpotensi melanggarnya.
+    - *Faithfulness* berisiko dilanggar akibat efek saling meniadakan pada hubungan Insulin-Outcome dan BMI-Outcome.
+    - *Causal Sufficiency* jelas dilanggar: gaya hidup, genetik spesifik, dan SES merupakan variabel laten penting yang tidak terobservasi.
+
+5.  **Keterbatasan dan Saran Penelitian Lanjutan:**
+
+    - Tambahkan variabel gaya hidup (aktivitas fisik, pola makan) dan genetik untuk mengurangi pelanggaran *causal sufficiency*.
+    - Terapkan **FCI Algorithm** (Fast Causal Inference) yang lebih robust terhadap variabel laten.
+    - Pertimbangkan **Kernel-based CI test (KCI)** sebagai alternatif diskretisasi yang tidak membuang informasi kontinu.
+    - Bandingkan hasil PC-Stable dengan **GES** (*Greedy Equivalence Search*) menggunakan BIC score untuk validasi silang struktur kausal.
+    - Validasi eksternal menggunakan data dari populasi berbeda untuk menguji generalisabilitas temuan.
+
+------------------------------------------------------------------------
+
+**Referensi:**
+
+1.  Chickering, D. M. (2002). Optimal Structure Identification with Greedy Equivalence Search. *Journal of Machine Learning Research*, 3, 507–554. <https://doi.org/10.1162/153244303321897717>
+2.  Colombo, D., & Maathuis, M. H. (2014). Order-independent constraint-based causal structure learning. *Journal of Machine Learning Research*, 15(1), 3741–3782. (Versi open-access: <http://jmlr.org/papers/v15/colombo14a.html>)
+3.  Glymour, C., Zhang, K., & Spirtes, P. (2019). Review of Causal Discovery Methods Based on Graphical Models. *Frontiers in Genetics*, 10, 524. <https://doi.org/10.3389/fgene.2019.00524>
+4.  Guyton, A. C., & Hall, J. E. (2021). *Textbook of Medical Physiology* (14th ed.). Elsevier. (Standard textbook fisiologi medis dasar).
+5.  Heinze-Deml, C., Maathuis, M. H., & Meinshausen, N. (2018). Causal Structure Learning. *Annual Review of Statistics and Its Application*, 5, 371-391. <https://doi.org/10.1146/annurev-statistics-031017-100630>
+6.  Pearl, J. (2009). *Causality: Models, Reasoning, and Inference* (2nd ed.). Cambridge University Press. <https://doi.org/10.1017/CBO9780511803161>
+7.  Scutari, M. (2010). Learning Bayesian Networks with the bnlearn R Package. *Journal of Statistical Software*, 35(3), 1–22. <https://doi.org/10.18637/jss.v035.i03>
+8.  Smith, J. W., et al. (1988). Using the ADAP learning algorithm to forecast the onset of diabetes mellitus. *Proceedings of the Annual Symposium on Computer Application in Medical Care*, 261–265. (Sumber original *Pima Indians Diabetes Database*).
+9.  Spirtes, P., Glymour, C., & Scheines, R. (2000). *Causation, Prediction, and Search* (2nd ed.). MIT Press. <https://doi.org/10.7551/mitpress/1754.001.0001>
+10. Textor, J., van der Zander, B., Gilthorpe, M. S., Liskiewicz, M., & Ellison, G. T. H. (2016). Robust causal inference using directed acyclic graphs: the R package 'dagitty'. *International Journal of Epidemiology*, 45(6), 1887–1894. <https://doi.org/10.1093/ije/dyw341>
+
+------------------------------------------------------------------------
+
+*Catatan Teknis: Analisis ini menggunakan R (*$\geq$ 4.1.0) dengan paket utama `bnlearn` ($\geq$ 4.7), `igraph`, `dagitty`, `ggplot2`, `dplyr`, `corrplot`, dan `knitr`. Dataset tersedia di: <https://www.kaggle.com/datasets/uciml/pima-indians-diabetes-database> \`\`\`
