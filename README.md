@@ -38,6 +38,4 @@ Tujuan utama dari proyek ini adalah untuk menemukan struktur kausal secara *data
 4. Anda dapat mengeksekusi *script* murni secara berurutan pada `pc_algorithm_vs_ges.R`, atau cukup menekan tombol **Knit** pada file `pc_algorithm_vs_ges.rmd` untuk mereproduksi laporan HTML dan memunculkan grafik baru.
 
 ---
-**Identitas Peneliti:**  
-**Muhammad Dhiauddin** (25917024)  
-*Sains Data - Profesional*
+
